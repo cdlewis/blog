@@ -10,7 +10,10 @@ ignoreErrors = ["error-disable-taxonomy"]
 hideMadeWithLine = true
 mainSections = ['blog']
 
-
 [permalinks]
   blog = "/:slug/"
   tags = "/blog/:slug"
+
+[caches]
+  [caches.images]
+    dir = ':cacheDir/images'
