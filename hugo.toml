@@ -8,11 +8,7 @@ ignoreErrors = ["error-disable-taxonomy"]
 
 [params]
 hideMadeWithLine = true
-mainSections = ['blog']
-title = "Chris' Blog"
 description = "Various ramblings"
-
-
 
 [permalinks]
   blog = "/:slug/"
