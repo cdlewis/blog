@@ -1,0 +1,16 @@
+baseURL = 'https://blog.chrislewis.au'
+languageCode = 'en-au'
+title = "Chris's Blog"
+theme = 'hugo-bearblog'
+
+disableKinds = ["taxonomy"]
+ignoreErrors = ["error-disable-taxonomy"]
+
+[params]
+hideMadeWithLine = true
+mainSections = ['blog']
+
+
+[permalinks]
+  blog = "/:slug/"
+  tags = "/blog/:slug"
