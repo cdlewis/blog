@@ -3,6 +3,7 @@ title = "Using Coding Agents to Decompile Nintendo 64 Games"
 date = "2025-11-04T17:41:10-05:00"
 description = "A look at where coding agents help (and don’t) in matching decompilation of Snowboard Kids 2 on the Nintendo 64."
 draft = false
+images = ['sbk2-title.webp']
 +++
 
 Recently I've been working on a matching decompilation of [Snowboard Kids 2](https://github.com/cdlewis/snowboardkids2-decomp), an incredibly underrated racing game for the Nintendo 64. The purpose of this post is to document how coding agents have and haven't helped this process. While much has been written about LLMs, far less has been written about decompilation,[^2] so I’m adding another data point. A few lessons may apply beyond N64. If you’ve got suggestions to improve the workflow, please let me know!
