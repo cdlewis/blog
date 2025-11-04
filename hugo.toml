@@ -17,3 +17,10 @@ description = "Various ramblings"
 [caches]
   [caches.images]
     dir = ':cacheDir/images'
+
+[markup]
+  [markup.highlight]
+    style = 'friendly'
+    lineNos = true
+    lineNumbersInTable = false
+    codeFences = true
