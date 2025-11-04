@@ -20,7 +20,6 @@ description = "Various ramblings"
 
 [markup]
   [markup.highlight]
-    style = 'friendly'
     lineNos = true
     lineNumbersInTable = false
     codeFences = true
