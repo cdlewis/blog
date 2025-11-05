@@ -6,7 +6,7 @@ draft = false
 images = ['sbk2-title.webp']
 +++
 
-Recently, I've been working on a matching decompilation of [Snowboard Kids 2](https://github.com/cdlewis/snowboardkids2-decomp), an incredibly underrated racing game for the Nintendo 64. The purpose of this post is to document how coding agents have and haven't helped the decompilation process. While much has been written about LLMs, far less has been written about decompilation,[^2] so I’m adding another data point. A few lessons may apply beyond the N64. If you’ve got suggestions to improve the workflow, please let me know!
+Recently, I've been working on a matching decompilation of [Snowboard Kids 2](https://github.com/cdlewis/snowboardkids2-decomp), an incredibly underrated racing game for the Nintendo 64. The purpose of this post is to document how coding agents have and haven't helped with the decompilation process. While much has been written about LLMs, far less has been written about decompilation,[^2] so I’m adding another data point. A few lessons may apply beyond the N64. If you’ve got suggestions to improve the workflow, please let me know!
 
 ![Snowboard Kids 2 title screen with logo](/sbk2-title.webp)
 
@@ -16,7 +16,7 @@ Recently, I've been working on a matching decompilation of [Snowboard Kids 2](ht
 
 Snowboard Kids 2 was written in C and compiled to MIPS machine code. The compiler was likely GCC 2.7.2 based on the instruction patterns.[^4]
 
-The matching decompilation process involves analysing the MIPS assembly, inferring its behaviour, and writing C that, when compiled with the same toolchain and settings, reproduces the exact code: same registers, same delay slots, and the same instruction order.
+The matching decompilation process involves analysing the MIPS assembly, inferring its behaviour, and writing C that, when compiled with the same toolchain and settings, reproduces the exact code: same registers, delay slots, and instruction order.
 
 For example:
 
@@ -49,11 +49,11 @@ void func_800B0858_1DD908(s16 *arg0) {
 }
 ```
 
-Of course, this still doesn't tell us what the function is _for_ in the broader codebase. Why clamp the argument to `func_80057564_58164` to a minimum of four? Matching the bytes is only the first step. A true match requires understanding the function's intent through naming conventions, cross-references, and analysis of how the call sites behave.
+Of course, this still doesn't tell us what the function is _for_ in the broader codebase. Why clamp the argument to `func_80057564_58164` to a minimum of four? Matching the bytes, however, is only the first step. A true match requires understanding the function's intent through naming conventions, cross-references, and analysis of how the call sites behave.
 
 Matches also vary in quality. A good match is more than just C code that compiles to the right bytes.[^3] It should look like something an N64-era developer would plausibly have written: simple, idiomatic C control flow and sensible data structures.[^9] Prioritising plausibility pays off: later functions naturally share helpers and struct layouts, and you avoid artefacts that only exist to trigger some quirk of the compiler.
 
-Why do a matching decompilation at all? It deepens understanding of the engine, opens the door to new content, it provides a solid base for tooling and, most importantly, it's fun!
+Why do a matching decompilation at all? It deepens understanding of the engine, opens the door to new content, provides a solid base for tooling and, most importantly, it's fun!
 
 ## My Workflow
 
@@ -73,7 +73,21 @@ Agents come in at Step 3. I have a helper script that pulls scratches from `deco
 
 This script creates a dedicated subdirectory for the match attempt, which in turn has a [tailored CLAUDE.md file](https://github.com/cdlewis/snowboardkids2-decomp/blob/main/tools/claude-decomp-env/CLAUDE.md)[^6] and a set of tools. For convenience, it also starts a new Claude instance with instructions to read the aforementioned file and 'use thinking'.
 
-The agent environment exposes several tools, including:
+Agents have their own loop, described in CLAUDE.md:
+
+> Repeat the following steps:
+>
+> 1. Run ./build.sh base.c to build base.c and get an object dump of the compiled code. You will also get a score, with a score of 100% indicating a perfect match.
+> 2. Look for an area where the control flow and instructions do not match. Consider what the original developers probably intended to write given the function's broader purpose. Print out an explanation for why they don't match.
+> 3. Test your change by creating a new file (base_n.c where n is your attempt number).
+> 4. Run ./build.sh base_n.c (where n is your attempt number).
+> 5. If your possible solution did not improve the match percentage, use tools to analyse what went wrong and summarise your theory. Then apply this theory to improving the match in your next attempt.
+
+The purpose of this workflow is to encourage the agent to identify and test small, incremental improvements. Claude would otherwise attempt to fix everything at once, only to be confounded by the drop in match rate, which had too many possible causes to diagnose effectively. Similarly, each attempt is made in a new file so that we can easily recover good matches. We want to avoid situations where an agent achieves a good match but subsequently edits the file and degrades its quality. The trail of attempts is also a useful reference for the agent.
+
+The requests in Step 2 and Step 5 for an explanation are intended to encourage the agent to (respectively) anticipate the effect of its changes and reflect on their outcomes.
+
+The agent environment also exposes several tools, including:
 
 - Build & diff: compile a C file and diff it against the target binary, reporting a match percentage (0–100%).
 - Disassembly: dump a binary to MIPS assembly.
@@ -108,11 +122,11 @@ Some of these are experiments I’ve tried; others are hypotheses I haven’t te
 
 My [Claude script](https://github.com/cdlewis/snowboardkids2-decomp/blob/main/tools/claude) creates a dedicated directory with focused instructions and tools for each attempt. In theory, you could instead run Claude from the root directory; with the right prompting, it might perform as well or better.
 
-In practice, running from the root directory burned a lot of tokens before any decompilation began, as the agent explored the environment. Results were mixed, and the extra tokens didn’t translate into a clear win. (This was pre-subscription, when wasted tokens hurt more.)
+In practice, running from the root directory burned a lot of tokens before any decompilation began, as the agent explored the environment. Results were mixed, and the extra tokens didn’t translate into a clear win. This occurred prior to subscription access, when wasted tokens had a greater cost.
 
 ### Verbose Tool Output
 
-Originally the `compile.sh` tool dumped full candidate and target assembly on every build. This information is relevant to the agent, which needs to see the assembly output generated by its latest attempt. However force-feeding Claude relevant context didn't seem to help. Claude often ignored this information and attempted to dissassemble the object files again anyway.
+Originally the `compile.sh` tool dumped full candidate and target assembly on every build. This information is relevant to the agent, which needs to see the assembly output generated by its latest attempt. However force-feeding Claude relevant context didn't seem to help. Claude often ignored this information and re-disassembled the object files regardless.
 
 My takeaway is: don't provide unasked-for context. Keep disassembly available on demand and only include full listings when requested.
 
@@ -130,7 +144,7 @@ I’m not in a rush to try this.
 
 The permuter shines when a match is nearly complete. It can nudge register allocation or scheduling just enough to cross to 100%. This is an area in which Claude often struggles because sometimes fixing register allocations is just a matter of trying (literally) a million different things. Such a scale is beyond the reach of current agents; at best, Claude often racks up dozens of attempts.
 
-Making a permuter tool available to coding agents could enable them to generate new approaches more effectively. But this would need to be accompanied by strong safeguards such as requiring a minimum match % and clear instructions to avoid implausible suggestions.
+Making a permuter tool available to coding agents could enable them to generate new approaches more effectively. However, this approach would need to be accompanied by strong safeguards such as requiring a minimum match percentage and clear instructions to avoid implausible suggestions.
 
 ### XML Prompt
 
