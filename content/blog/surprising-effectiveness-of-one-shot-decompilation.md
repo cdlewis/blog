@@ -113,7 +113,7 @@ The remaining functions will almost certainly be the most challenging to decompi
 
 _If you've made it this far, you probably have an interest in decompilation and Snowboard Kids. Give it a try. Take a look at [difficult_functions](https://github.com/cdlewis/snowboardkids2-decomp/blob/main/tools/difficult_functions) on the [Snowboard Kids 2 decomp GitHub page](https://github.com/cdlewis/snowboardkids2-decomp) and see if you can beat the LLMs!_
 
-_Something to say? You can upvote and/or join [the discussion on Hacker News](#)._
+_Something to say? You can upvote and/or join [the discussion on Hacker News](https://news.ycombinator.com/item?id=46080498)._
 
 [^1]: Inspired by Anand Chowdhary's post on [running Claude Code in a loop](https://anandchowdhary.com/blog/2025/running-claude-code-in-a-loop).
 [^3]: Why didn't I update the prompt to reflect this? Because it made Claude confused and it stopped committing changes. LLMs are weird. This needs more experimentation.
