@@ -43,7 +43,6 @@ With that background out of the way, here's the workflow I actually use. It cons
 ## Set up Ares
 
 Ares works like most emulators: load your ROM and run it. It doesn’t really matter whether this is the original ROM or one built from your decompilation project; by definition, every byte should be identical. The default debug settings are fine; just make sure debugging is enabled.
-![screenshot of sunny mountain on level select screen](/sunny-mountain.webp)
 
 ### Set up SSH Tunnel
 
