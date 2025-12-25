@@ -63,7 +63,7 @@ The [full prompt](https://github.com/cdlewis/snowboardkids2-decomp/blob/main/CLA
 2. Follow the instructions in that environment and use the provided tools to decompile the function.
 3. Give up if it's too hard. If there is no progress after more than ten attempts, the agent should move on.
 4. If matched: integrate into the project, verify the build, and commit. Committing is critical. This preserves progress even if Claude later ends up borking the local environment.
-5. If not matched: add to the [difficult_functions](https://github.com/cdlewis/snowboardkids2-decomp/blob/main/tools/difficult_functions) log and exit.
+5. If not matched: add to the [difficult_functions](https://github.com/cdlewis/snowboardkids2-decomp/blob/25a18a46d1223319730589efed83d88808089e5f/tools/difficult_functions) log and exit.
 
 The 'give up after ten attempts' threshold aims to prevent Claude from wasting tokens when further progress is unlikely. It was only partially successful, as Claude would still sometimes make dozens of attempts.
 
@@ -81,7 +81,7 @@ Similarly, Claude sometimes gets lost when moving between the matching environme
 
 This defensive tooling strategy has proved far more effective than prompt engineering in mitigating specific Claude failure patterns.
 
-Another important consideration is token efficiency, which has become significantly more relevant as Claude is now run for extended periods. This is what originally motivated the decision for [vacuum.sh](https://github.com/cdlewis/snowboardkids2-decomp/blob/main/tools/vacuum.sh) to invoke the scorer then pass Claude the cheapest function rather than having Claude choose for itself.[^3] Tweaks to tooling can also help. [build-and-verify.sh](https://github.com/cdlewis/snowboardkids2-decomp/blob/main/tools/build-and-verify.sh) significantly limits build output in an effort to save tokens.
+Another important consideration is token efficiency, which has become significantly more relevant as Claude is now run for extended periods. This is what originally motivated the decision for [vacuum.sh](https://github.com/cdlewis/snowboardkids2-decomp/blob/b40d6c200495b85634c85d725d5cde6644ca76c5/tools/vacuum.sh) to invoke the scorer then pass Claude the cheapest function rather than having Claude choose for itself.[^3] Tweaks to tooling can also help. [build-and-verify.sh](https://github.com/cdlewis/snowboardkids2-decomp/blob/main/tools/build-and-verify.sh) significantly limits build output in an effort to save tokens.
 
 ### The Driver
 
@@ -111,9 +111,9 @@ Traditional decompilation efforts have often been multi-year, team-based project
 
 The remaining functions will almost certainly be the most challenging to decompile (barring a few Claude quirks). Even when LLMs succeed, the output is often rough: pointer arithmetic instead of array access, control flow reliant on goto statements, awkward temporary variables, and other issues affecting code clarity. If the goal is to understand how these games work (or to modify them) byte-perfect but ugly matches don't buy us much over the original assembly. It seems likely that future decompilation workflows will focus more on cleaning up and documenting LLM output than on writing code from scratch, using these matches as a base in much the same way earlier projects built on [m2c](https://github.com/matt-kempster/m2c) output.
 
-_If you've made it this far, you probably have an interest in decompilation and Snowboard Kids. Give it a try. Take a look at [difficult_functions](https://github.com/cdlewis/snowboardkids2-decomp/blob/main/tools/difficult_functions) on the [Snowboard Kids 2 decomp GitHub page](https://github.com/cdlewis/snowboardkids2-decomp) and see if you can beat the LLMs!_
+_If you've made it this far, you probably have an interest in decompilation and Snowboard Kids 2. Why not help out?. Take a look at the [Snowboard Kids 2 decomp GitHub page](https://github.com/cdlewis/snowboardkids2-decomp) and see if you can beat the LLMs!_
 
-_Something to say? You can upvote and/or join [the discussion on Hacker News](https://news.ycombinator.com/item?id=46080498)._
+_Something to say? You can upvote and/or join [the discussion on Hacker News](https://news.ycombinator.com/item?id=46080498). You can also [follow me on Bluesky](https://bsky.app/profile/chrislewis.au) for more Snowboard Kids 2 updates._
 
 [^1]: Inspired by Anand Chowdhary's post on [running Claude Code in a loop](https://anandchowdhary.com/blog/2025/running-claude-code-in-a-loop).
 [^3]: Why didn't I update the prompt to reflect this? Because it made Claude confused and it stopped committing changes. LLMs are weird. This needs more experimentation.

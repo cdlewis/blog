@@ -158,7 +158,7 @@ Coding agents have clear benefits and have lowered the barrier to entry for deco
 
 If you’ve made it this far, you probably have an interest in decompilation and Snowboard Kids. Give it a try: decompile a small function or contribute to the project. You can find more details on the [Snowboard Kids 2 decomp Github page](https://github.com/cdlewis/snowboardkids2-decomp).
 
-*Something to say? You can upvote and/or join [the discussion on HackerNews](https://news.ycombinator.com/item?id=45821911)*
+_Something to say? You can upvote and/or join [the discussion on HackerNews](https://news.ycombinator.com/item?id=45821911). You can also [follow me on Bluesky](https://bsky.app/profile/chrislewis.au) for more Snowboard Kids 2 updates._
 
 [^1]: I couldn't think of anything better than how [Twilight Princess Decompilation](https://zsrtp.link/about) defines matching decompilation.
 [^2]: The one exception I'm aware of is [this excellent series of posts](https://gambiconf.substack.com/p/development-journey-on-game-decompilation) by Macabeus.
