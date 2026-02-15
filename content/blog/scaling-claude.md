@@ -1,7 +1,8 @@
 +++
 title = "The Long Tail of LLM-Assisted Decompilation"
-date = "2026-02-16T12:44:27-05:00"
+date = "2026-02-14T12:44:27-05:00"
 tags = []
+draft = false 
 +++
 
 In my previous posts, I described [how coding agents could be used to decompile Nintendo 64 games](https://blog.chrislewis.au/using-coding-agents-to-decompile-nintendo-64-games/) and that [one-shot decompilation was very effective](/the-unexpected-effectiveness-of-one-shot-decompilation-with-claude/).
@@ -16,7 +17,7 @@ This post describes how that workflow evolved as the project matured, what helpe
 
 Decompilation attempts take time and tokens, so the choice of which functions to attempt decompilation of matters a great deal. My original approach prioritised functions based on estimated difficulty. A logistic regression model ranked candidates using features like instruction count and control-flow complexity, and Claude would always attempt the 'easiest' remaining function. That worked remarkably well early on, but it eventually ran out of steam. At some point, everything left was hard. Reordering the queue didn't magically make those functions easier.
 
-Aside from making the best use of limited resources, the intuition was that building up matched code would make future work easier, giving Claude more context and a body of decompiled C to reference. Put another way: if Claude has already successfully decompiled something very similar, it has a much better chance of matching the next one. 
+Aside from making the best use of limited resources, the intuition was that building up matched code would make future work easier, giving Claude more context and a body of decompiled C to reference. Put another way: if Claude has already successfully decompiled something very similar, it has a much better chance of matching the next one.
 
 Claude could sometimes identify and leverage these similarities, but they needed to be obvious. And as the number of 'easy' functions decreased, the parallels between matched and unmatched functions became increasingly important. At a minimum, the next logical step was to give Claude tooling to look up similar functions and encourage it, through prompting, to actually use them. And if function similarity proved to be highly valuable, we could also re-orient our whole strategy to explicitly focus on decompiling functions that were substantially similar to already decompiled functions. This approach was initially suggested by [Macabeus](https://github.com/macabeus). We could create a text embedding from each function's assembly instructions and then query for nearby functions in this high-dimensional latent space.
 
@@ -30,13 +31,12 @@ There are many ways to compute function similarity, and vector embeddings aren't
 
 For direct function-to-function comparisons, several other options present themselves:
 
-* **Instruction N-Grams**: based on n-gram similarity over normalised instruction trigrams, with a fallback to edit distance for very small functions. Instructions are aggressively normalised: registers are abstracted by class, addresses are replaced with placeholders, branch labels are canonicalised, and call targets are reduced to `jal FUNC`.
-* **Control-flow**: compares sequences of branch and jump opcodes using edit distance, combined with a comparison of branch density ratios.
-* **Data-Accesses**: looks at memory offsets accessed by the function, along with patterns in offset deltas to catch similar struct access layouts.
-* **Function Structure**: compares instruction counts, branch counts, jump counts, and stack frame sizes.
+- **Instruction N-Grams**: based on n-gram similarity over normalised instruction trigrams, with a fallback to edit distance for very small functions. Instructions are aggressively normalised: registers are abstracted by class, addresses are replaced with placeholders, branch labels are canonicalised, and call targets are reduced to `jal FUNC`.
+- **Control-flow**: compares sequences of branch and jump opcodes using edit distance, combined with a comparison of branch density ratios.
+- **Data-Accesses**: looks at memory offsets accessed by the function, along with patterns in offset deltas to catch similar struct access layouts.
+- **Function Structure**: compares instruction counts, branch counts, jump counts, and stack frame sizes.
 
 The initial implementation combined these features into a single score, weighted by my best guess at their predictive value. I gave the n-grams and control-flow features the greatest weight.
-
 
 In hindsight, this was probably overcomplicated. The goal wasn't perfect semantic equivalence, just to surface functions that look alike in ways that matter for decompilation. There's already a tool that does this: [Coddog](https://github.com/ethteck/coddog). Instead of feature engineering, Coddog computes a bounded Levenshtein distance directly over opcode sequences, with aggressive early exits when similarity is impossible. Sequences are flattened to bytes, compared under a configurable threshold, and normalised to a [0, 1] similarity score.
 
@@ -54,7 +54,7 @@ Permuters aren't a panacea, and their suggestions need to be taken with a pinch 
 
 Still, in theory these approaches should complement each other nicely. Claude does the bulk of the work and then permutes out the last few holdouts. The skill tried to enforce that work breakdown by instructing Claude to not use the permuter unless a function was already >95% matched.
 
-In practice, however, Claude had a tendency to fall into doom loops, endlessly optimising against permuter artefacts rather than meaningfully improving the code. 
+In practice, however, Claude had a tendency to fall into doom loops, endlessly optimising against permuter artefacts rather than meaningfully improving the code.
 
 After a few attempts to fix this, I removed the permuter. The occasional win didn't justify the token burn or cleanup. It also made it harder to pick up where Claude left off and attempt to match manually, since the code had a tendency to be stuck in either a hopeless local minima or a mess of unnecessary noise (such as additional temporary variables, `do {} while` loops, and nested assignments) that I needed to start from scratch anyway.
 
@@ -111,10 +111,10 @@ In one particularly amusing case, Claude couldn't get a function to match, so it
 
 Hooks proved invaluable for preventing this behaviour and guiding the agent. Hooks allow us to run code before the agent takes a specific action, for example when editing a file. I've found them incredibly useful. You can find the full list of hooks [here](https://github.com/cdlewis/snowboardkids2-decomp/tree/main/.claude/hooks). Currently, I use hooks to:
 
-* Block changes to the SHA1 hash (solving the earlier issue);
-* Block Claude from skipping tests when trying to commit a change;
-* Block Claude from building the project in any way other than `build-and-verify.sh`; and
-* Block Claude from trying to edit automatically generated files.
+- Block changes to the SHA1 hash (solving the earlier issue);
+- Block Claude from skipping tests when trying to commit a change;
+- Block Claude from building the project in any way other than `build-and-verify.sh`; and
+- Block Claude from trying to edit automatically generated files.
 
 All, regrettably, are things Claude has done to me. Hooks have significantly reduced how often Claude attempts something misguided or destructive. But they're not perfect, and Claude can be very persistent when it **really** wants to do something. I've seen Claude run the contents of a `make` command when `make` itself is blocked, or write a Python script to edit a file it's been told it can't edit. But hooks at least offer better enforcement than prompting alone.
 
@@ -136,9 +136,9 @@ Nigel will automatically discover scripts (uniquely identified by name) and can 
 
 There are too many features to mention here, but some favourites are:
 
-* Nigel will show you the model output in real-time, even though Claude is running in non-interactive mode.
-* You can tell Nigel to stop after the current task finishes with Ctrl-backslash. Again, great for long-running sessions where you want to try something new but don't want to throw away 30+ minutes of work.
-* Built-in parallelism support with --shard X/Y, letting you distribute tasks across multiple worktrees without conflicts
+- Nigel will show you the model output in real-time, even though Claude is running in non-interactive mode.
+- You can tell Nigel to stop after the current task finishes with Ctrl-backslash. Again, great for long-running sessions where you want to try something new but don't want to throw away 30+ minutes of work.
+- Built-in parallelism support with --shard X/Y, letting you distribute tasks across multiple worktrees without conflicts
 
 ![screenshot of nigel running a task](/nigel_in_action.png "A screenshot of Nigel the cat in action. Note that Nigel was originally called task-runner and these configurations are still valid, which is why the 'task-runner' references in the screenshot come from")
 
@@ -166,8 +166,8 @@ At that point, **157 functions remained**. With continued manual work, that's no
 
 Two factors dominate:
 
-* Claude struggles badly with functions over around 500 instructions, and more or less gives up immediately beyond 1,000.
-* Graphics-heavy functions, especially those building display lists via macros, deeply confuse LLMs. Even with specialised tools, reversing macros from raw assembly is hard.
+- Claude struggles badly with functions over around 500 instructions, and more or less gives up immediately beyond 1,000.
+- Graphics-heavy functions, especially those building display lists via macros, deeply confuse LLMs. Even with specialised tools, reversing macros from raw assembly is hard.
 
 As a result, Nigel the cat doesn't do much these days. There's still documentation and cleanup to be done, but the era of endless unattended Claude loops is over, at least until a model arrives that can push past these limits.
 
