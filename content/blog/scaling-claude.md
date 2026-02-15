@@ -1,47 +1,42 @@
 +++
 title = "The Long Tail of LLM-Assisted Decompilation"
 date = "2026-02-14T12:44:27-05:00"
-description = "After rapidly decompiling 75% of Snowboard Kids 2 using Claude, progress hit a wall. This post explores the workflow evolution, tooling improvements, and fundamental LLM limits that emerged when tackling the long tail of increasingly difficult functions."
+description = "After rapid advances thanks to one-shot decompilation, progress on the Snowboard Kids 2 decompilation began to falter. This post explores the workflow evolution, tooling improvements, and fundamental LLM limits that emerged when tackling the long tail of increasingly difficult functions."
 images = ['function-embeddings-header.jpg']
 draft = false 
 +++
 
-In my previous posts, I described [how coding agents could be used to decompile Nintendo 64 games](https://blog.chrislewis.au/using-coding-agents-to-decompile-nintendo-64-games/) and that [one-shot decompilation was very effective](/the-unexpected-effectiveness-of-one-shot-decompilation-with-claude/).
+In my previous posts, I described [how coding agents could be used to decompile Nintendo 64 games](https://blog.chrislewis.au/using-coding-agents-to-decompile-nintendo-64-games/) and that [one-shot decompilation was very effective](/the-unexpected-effectiveness-of-one-shot-decompilation-with-claude/). That approach allowed me to make rapid progress on the [Snowboard Kids 2 decompilation](https://github.com/cdlewis/snowboardkids2-decomp), with the percentage of matched code quickly growing from around 25% to 58%.
 
-That approach allowed me to make rapid progress on the [Snowboard Kids 2 decompilation](https://github.com/cdlewis/snowboardkids2-decomp), with the percentage of matched code growing from around 25% to 58% in a relatively short period of time. Making further progress, however, became increasingly difficult and I had to significantly adapt my workflow. With those changes I pushed the decompilation into the ~75% range before stalling out again (this time, perhaps for good). Though I'd love to be proved wrong.
+After that, progress slowed dramatically, requiring me to significantly alter my workflow. With those changes, I pushed the decompilation into the ~75% range before stalling out again, this time perhaps for good, though I would love to be proved wrong.
 
-This post describes how that workflow evolved as the project matured, what helped (sometimes only briefly), and where the current limits of LLM-assisted decompilation became clear. My hope is that these observations will be useful for other decompilation projects.
+This post describes how my workflow has evolved as the project matured, what helped, and where I'm currently stuck. My hope is that these observations will be useful for other decompilation projects.
 
 ![chart showing recent decompilation progress](/progress-v2.svg#darksafe)
 
 ## Prioritising Similar Functions
 
-Decompilation attempts take time and tokens, so the choice of which functions to attempt decompilation of matters a great deal. My original approach prioritised functions based on estimated difficulty. A logistic regression model ranked candidates using features like instruction count and control-flow complexity, and Claude would always attempt the 'easiest' remaining function. That worked remarkably well early on, but it eventually ran out of steam. At some point, everything left was hard. Reordering the queue didn't magically make those functions easier.
+Decompilation attempts take time and tokens, so the choice of which unmatched functions to work on matters a great deal. My original approach prioritised functions based on estimated difficulty. A logistic regression model ranked candidates using features like instruction count and control-flow complexity, and Claude would always attempt the 'easiest' remaining function. That worked remarkably well early on, but it eventually ran out of steam. At some point, everything left was hard. Reordering the queue didn't magically make those functions easier.
 
-Aside from making the best use of limited resources, the intuition was that building up matched code would make future work easier, giving Claude more context and a body of decompiled C to reference. Put another way: if Claude has already successfully decompiled something very similar, it has a much better chance of matching the next one.
+At the same time, [Macabeus](https://github.com/macabeus) was exploring function similarity via text embeddings of assembly instructions, which then allowed querying for nearby functions in the high-dimensional latent space. This seemed promising. Claude's output already hinted that it could recognise similar functions and reuse patterns across them. The intuition here is that decompiled functions provide a useful reference to Claude for how particular blocks of assembly can be mapped to C code.
 
-Claude could sometimes identify and leverage these similarities, but they needed to be obvious. And as the number of 'easy' functions decreased, the parallels between matched and unmatched functions became increasingly important. At a minimum, the next logical step was to give Claude tooling to look up similar functions and encourage it, through prompting, to actually use them. And if function similarity proved to be highly valuable, we could also re-orient our whole strategy to explicitly focus on decompiling functions that were substantially similar to already decompiled functions. This approach was initially suggested by [Macabeus](https://github.com/macabeus). We could create a text embedding from each function's assembly instructions and then query for nearby functions in this high-dimensional latent space.
+To test this out, I wrote a tool to compute similar matched functions given an unmatched function and adjusted the agent loop to prioritise functions with similar (matched) counterparts. This approach proved highly effective. There were indeed many similar functions that Claude hadn't previously been able to identify, and these proved invaluable for helping guide its decompilation attempts.
 
 ![scatter plot of function vector embeddings](/function-embeddings.png#darksafe "‌UMAP 2D projection of function embeddings from 27 December 2025, with some arbitrary modifications to make it fit nicely into a blog post.")
 
-This was a great suggestion. We see a number of functions (pictured above) surrounded by already matched code.
-
 ### Computing Function Similarity
 
-There are many ways to compute function similarity, and vector embeddings aren't the only option. Vector embeddings are great for fast retrieval across huge corpora, which is one reason they're common in RAG systems. But I only had a few thousand candidates, and queries weren't time-sensitive. Computing exact similarity between every candidate (i.e. O(n²)) is not only feasible but preferable given the amount of time and tokens already invested in each decompilation attempt.
+Vector embeddings are just one way of computing function similarity. They are great for fast retrieval across huge corpora, which is one reason they're common in RAG systems. But I only had a few thousand candidates, and queries weren't time-sensitive. Computing exact similarity between every candidate is not only feasible but preferable, given how much time and tokens are already invested in each attempt.
 
-For direct function-to-function comparisons, several other options present themselves:
+My first attempt was to build a composite similarity score by hand. I combined:
+* Normalised instruction n-grams
+* Control-flow patterns
+* Memory access offsets and stride patterns
+* Structural metrics such as instruction counts and stack frame size
 
-- **Instruction N-Grams**: based on n-gram similarity over normalised instruction trigrams, with a fallback to edit distance for very small functions. Instructions are aggressively normalised: registers are abstracted by class, addresses are replaced with placeholders, branch labels are canonicalised, and call targets are reduced to `jal FUNC`.
-- **Control-flow**: compares sequences of branch and jump opcodes using edit distance, combined with a comparison of branch density ratios.
-- **Data-Accesses**: looks at memory offsets accessed by the function, along with patterns in offset deltas to catch similar struct access layouts.
-- **Function Structure**: compares instruction counts, branch counts, jump counts, and stack frame sizes.
+In hindsight, this was probably overcomplicated. There is already a tool that does something very similar: [Coddog](https://github.com/ethteck/coddog). Instead of feature engineering, it computes a bounded Levenshtein distance directly over opcode sequences, with aggressive early exits when similarity is impossible. The result is normalised to a similarity score between 0 and 1.
 
-The initial implementation combined these features into a single score, weighted by my best guess at their predictive value. I gave the n-grams and control-flow features the greatest weight.
-
-In hindsight, this was probably overcomplicated. The goal wasn't perfect semantic equivalence, just to surface functions that look alike in ways that matter for decompilation. There's already a tool that does this: [Coddog](https://github.com/ethteck/coddog). Instead of feature engineering, Coddog computes a bounded Levenshtein distance directly over opcode sequences, with aggressive early exits when similarity is impossible. Sequences are flattened to bytes, compared under a configurable threshold, and normalised to a [0, 1] similarity score.
-
-I ended up adding Coddog similarity scoring as well. It's hard to say whether Coddog was better or merely complementary though since they both operated on different sets of functions. Unless Anthropic dramatically increases usage quotas, I'm not willing to burn tokens running a proper experiment. Anecdotally, however, the Coddog approach seemed at least as effective as the more 'sophisticated' initial approach.
+I ended up adding Coddog scoring alongside my own approach. It is difficult to say whether it was strictly better or simply complementary, since they were not evaluated on identical sets of functions. I am not about to burn through a large pile of tokens to run a controlled experiment. Anecdotally, though, the simpler approach performed at least as well as my more elaborate one.
 
 ## Skills and Tooling
 
@@ -49,31 +44,31 @@ Specialised tooling can make a big difference to Claude's performance. The proje
 
 ### Permuters
 
-Claude is slow when making changes and there are thousands of possible tweaks we could try to turn a 99.9% match into a 100% match. A permuter is the complete opposite. It will mindlessly try millions of different changes to the source code in the hope of chancing upon a match.
+Claude is slow and deliberate. Turning a 99.9% match into 100% can involve thousands of tiny variations in control flow, temporaries, or expression ordering. A permuter is the opposite. It blindly tries millions of small mutations in the hope that one of them produces a perfect match.
 
-Permuters aren't a panacea, and their suggestions need to be taken with a pinch of salt. These changes might temporarily improve the match percentage but not in a constructive way. For example, the permuter might delete a function call, which happens to change the registers used by the compiler in a way that makes the rest of the function better match the original. But if that call was in the original function, you'll need to add it back eventually. You're not actually any closer to a match than you were before.
+In theory, this should complement an LLM nicely. Claude does the structured reasoning, the permuter brute-forces the final few percent. The skill enforced this split by allowing the permuter to run only once a function was already more than 95% matched.
 
-Still, in theory these approaches should complement each other nicely. Claude does the bulk of the work and then permutes out the last few holdouts. The skill tried to enforce that work breakdown by instructing Claude to not use the permuter unless a function was already >95% matched.
+In practice, it was messy.
 
-In practice, however, Claude had a tendency to fall into doom loops, endlessly optimising against permuter artefacts rather than meaningfully improving the code.
+Permuters happily introduce strange code: illogical variable reuse, `do {} while (0)` loops, nested assignments. Sometimes these changes work. Often they do not. Worse, they optimise for incremental improvements to the match percentage rather than for correctness. A small reordering might delete a function call or subtly change register allocation in a way that improves the match. But if that call existed in the original, you will have to restore it eventually. You are not actually closer to a clean match. You have just moved the compiler into a more convenient shape.
 
-After a few attempts to fix this, I removed the permuter. The occasional win didn't justify the token burn or cleanup. It also made it harder to pick up where Claude left off and attempt to match manually, since the code had a tendency to be stuck in either a hopeless local minima or a mess of unnecessary noise (such as additional temporary variables, `do {} while` loops, and nested assignments) that I needed to start from scratch anyway.
+Claude, unfortunately, tended to treat these artefacts as signal. It would start optimising around permuter-induced noise, leading to doom loops and token burn with little real progress.
+
+After a few attempts to rein this in, I removed the permuter entirely. The occasional win did not justify the cleanup cost or the instability it introduced. It also made manual intervention harder, since the codebase would drift into awkward, overfitted forms that no human would willingly write.
 
 ### F3Dex Tooling and Documentation
 
-The N64 has a dedicated graphics chip called the Reality Display Processor (RDP). Games execute microcode on the RDP to render graphics on the screen. They have a lot of flexibility in terms of how they want to use the RDP, but most games just opt for an off-the-shelf library provided by Nintendo. If your game doesn't do this, you need to reverse engineer a company's idiosyncratic microcode in addition to the game itself. Thankfully, Snowboard Kids 2 opted for a Nintendo library, specifically [F3Dex2](https://ultra64.ca/files/documentation/online-manuals/man/pro-man/pro25/index25.4.html).
+The N64 has a dedicated graphics chip, the Reality Display Processor (RDP). Games execute microcode on the RDP to render graphics on the screen. They have a lot of flexibility in terms of how they want to use the RDP, but most games just opt for an off-the-shelf library provided by Nintendo. If your game doesn't do this, you need to reverse engineer a company's idiosyncratic microcode in addition to the game itself. Thankfully, Snowboard Kids 2 opted for a Nintendo library, specifically [F3Dex2](https://ultra64.ca/files/documentation/online-manuals/man/pro-man/pro25/index25.4.html).
 
-After loading their desired microcode library, games send instructions to the RDP via display lists.
-
-Conceptually they're just arrays of bytes representing microcode instructions, but they're a headache for decompilers, especially when built dynamically. This is because games often use helper libraries with specialised macros for generating the instructions. (Sorry, more indirection.)
+After loading their desired microcode library, games send instructions to the RDP via display lists. Conceptually, display lists are just arrays of bytes representing microcode instructions, but they're a headache for decompilers. Games often build them dynamically using macros that may invoke other macros or perform complex bit arithmetic. The compiler then optimises and reorganises this logic, making it difficult to discern what the original developers actually wrote.
 
 ![simplified example of basic C decompiled code being transformed into proper F3Dex2 instructions](/f3dex-function.svg#darksafe "‌A simplified example of what an F3Dex2 call might look like as decompiled C, then how it could in turn be disassembled into F3Dex2 instructions, and ultimately how (with full knowledge of the API) it's actually just a single texture load.")
 
-Agents are smart, but this is obviously a highly domain-specific and context-specific scenario. It is a clear use-case for a Claude skill.[^1] I provided Claude with a [reference for F3Dex2 commands](https://github.com/cdlewis/snowboardkids2-decomp/blob/aead56b997d0b8dfaa1e920da857351b6e43f007/tools/claude-decomp-env/f3dex2-reference.md), a tool to disassemble hex values into specific commands (gfxdis.f3dex2), and some strategies for handling more specific edge cases such as aggregate commands. Unsurprisingly, this made Claude far more effective at recognising and decompiling F3Dex2 code.
+Agents are smart, but this is a highly domain-specific and context-specific scenario. It's a clear use-case for a Claude skill.[^1] I provided Claude with a [reference for F3Dex2 commands](https://github.com/cdlewis/snowboardkids2-decomp/blob/aead56b997d0b8dfaa1e920da857351b6e43f007/tools/claude-decomp-env/f3dex2-reference.md), a tool to disassemble hex values into specific commands (gfxdis.f3dex2), and some strategies for handling more specific edge cases such as aggregate commands. Unsurprisingly, this made Claude far more effective at recognising and decompiling F3Dex2 code.
 
 ## Cleanup and Documentation
 
-Cleaning up and documenting code doesn't directly improve the match rate but it can help reach previously unmatchable functions. Many of the earlier functions (particularly those done by Claude) were quite brittle. They technically matched, but relied on pointer arithmetic, awkward temporaries, or control flow no human would write. Those matches worked, but they were poor references when an unmatched function was later identified as similar to them.
+Cleaning up and documenting code doesn't directly improve the match rate but it can help reach previously unmatchable functions. Many of the earlier functions (particularly those done by Claude) were quite brittle. They technically matched, but relied on pointer arithmetic, awkward temporaries, or control flow no human would willingly write. Those matches worked, but they were poor references when an unmatched function was later identified as similar to them.
 
 Cleaner, more idiomatic matches make better examples once similarity-based scheduling kicks in. If a function really should be using array indexing instead of pointer math, fixing that improves the signal Claude sees when attempting related code.
 
@@ -98,7 +93,7 @@ These will be discussed in turn.
 
 ### Worktrees
 
-This isn't particularly controversial, but I mention it to place the remaining items in context. There are multiple tasks that we need to perform. Worktrees are the recommended way to run multiple agents on a single codebase. Agents need their own version of the codebase to work with, or we risk conflicting changes, errors, and so on.
+There are multiple tasks that we need to perform. Worktrees are the [recommended way](https://code.claude.com/docs/en/common-workflows#run-parallel-claude-code-sessions-with-git-worktrees) to run multiple agents on a single codebase. Agents need their own version of the codebase to work with, or we risk conflicting changes, errors, and so on.
 
 Today I run agents across three separate worktrees in addition to the main branch, where I do human stuff.
 
@@ -108,7 +103,7 @@ Today I run agents across three separate worktrees in addition to the main branc
 
 Greater automation of the decompilation and documentation work also increased the possibility of Claude creating and committing mistakes. The unsupervised nature of the work means these can lie undetected for hours, potentially invalidating all the intervening work that has been done.
 
-In one particularly amusing case, Claude couldn't get a function to match, so it updated the SHA1 hash that was used for comparison between the compiled artefact and the original rom. All work done after that point had to be reverted.
+In one particularly amusing case, Claude couldn't get a function to match, so it updated the SHA1 hash that was used for comparison between the compiled artefact and the original ROM. All work done after that point had to be reverted.
 
 Hooks proved invaluable for preventing this behaviour and guiding the agent. Hooks allow us to run code before the agent takes a specific action, for example when editing a file. I've found them incredibly useful. You can find the full list of hooks [here](https://github.com/cdlewis/snowboardkids2-decomp/tree/main/.claude/hooks). Currently, I use hooks to:
 
@@ -117,7 +112,7 @@ Hooks proved invaluable for preventing this behaviour and guiding the agent. Hoo
 - Block Claude from building the project in any way other than `build-and-verify.sh`; and
 - Block Claude from trying to edit automatically generated files.
 
-All, regrettably, are things Claude has done to me. Hooks have significantly reduced how often Claude attempts something misguided or destructive. But they're not perfect, and Claude can be very persistent when it **really** wants to do something. I've seen Claude run the contents of a `make` command when `make` itself is blocked, or write a Python script to edit a file it's been told it can't edit. But hooks at least offer better enforcement than prompting alone.
+Hooks have significantly reduced how often Claude attempts something misguided or destructive, though they are not perfect. Claude can be very persistent when it **really** wants to do something. I've seen Claude run the contents of a `make` command when `make` itself is blocked, or write a Python script to edit a file it's been told it can't edit. But hooks at least offer better enforcement than prompting alone.
 
 ### Task Orchestration with Nigel the Cat
 
@@ -135,7 +130,7 @@ prompt: "Look up the modelEntityConfigs entry or entries where `$INPUT` in src/m
 
 Nigel will automatically discover scripts (uniquely identified by name) and can run them with proper handling to ensure the same input isn't handled twice, good changes are committed, failures are handled gracefully, etc.
 
-There are too many features to mention here, but some favourites are:
+Some of my favourite Nigel features are:
 
 - Nigel will show you the model output in real-time, even though Claude is running in non-interactive mode.
 - You can tell Nigel to stop after the current task finishes with Ctrl-backslash. Again, great for long-running sessions where you want to try something new but don't want to throw away 30+ minutes of work.
@@ -161,9 +156,7 @@ I usually try glaude first, or reach for it when I know the task is mechanical. 
 
 ## 157 Functions
 
-After all that engineering (similarity scoring, skills, hooks, orchestration, model routing), the curve ultimately flattened in early January.
-
-At that point, **157 functions remained**. With continued manual work, that's now down to **144**, but the dynamic has fundamentally changed.
+After all that engineering (similarity scoring, skills, hooks, orchestration, model routing), the curve ultimately flattened in early January. At that point, 157 functions remained. With continued manual work, that's now down to 144, but the dynamic has fundamentally changed.
 
 Two factors dominate:
 
