@@ -1,7 +1,8 @@
 +++
 title = "The Long Tail of LLM-Assisted Decompilation"
 date = "2026-02-14T12:44:27-05:00"
-tags = []
+description = "After rapidly decompiling 75% of Snowboard Kids 2 using Claude, progress hit a wall. This post explores the workflow evolution, tooling improvements, and fundamental LLM limits that emerged when tackling the long tail of increasingly difficult functions."
+images = ['function-embeddings-header.jpg']
 draft = false 
 +++
 
