@@ -1,0 +1,4 @@
+<img src="{{ .Destination | safeURL }}" alt="{{ .Text }}" />
+{{ if .Title }}
+<p class="image-caption">{{ .Title }}</p>
+{{ end }}
