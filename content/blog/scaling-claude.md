@@ -26,7 +26,7 @@ To test this out, I wrote a tool to compute similar matched functions given an u
 
 ### Computing Function Similarity
 
-Vector embeddings are just one way of computing function similarity. They are great for fast retrieval across huge corpora, which is one reason they're common in RAG systems. But I only had a few thousand candidates, and queries weren't time-sensitive. Computing exact similarity between every candidate is not only feasible but preferable, given how much time and tokens are already invested in each attempt.
+Vector embeddings are just one way of computing function similarity. They are great for fast retrieval across huge corpora, which is one reason they're common in RAG systems. But I only had a few thousand candidates, and queries weren't time-sensitive. Computing exact similarity between every pair of candidates is not only feasible but preferable, given how much time and tokens are already invested in each attempt.
 
 My first attempt was to build a composite similarity score by hand. I combined:
 * Normalised instruction n-grams
@@ -36,11 +36,23 @@ My first attempt was to build a composite similarity score by hand. I combined:
 
 In hindsight, this was probably overcomplicated. There is already a tool that does something very similar: [Coddog](https://github.com/ethteck/coddog). Instead of feature engineering, it computes a bounded Levenshtein distance directly over opcode sequences, with aggressive early exits when similarity is impossible. The result is normalised to a similarity score between 0 and 1.
 
-I ended up adding Coddog scoring alongside my own approach. It is difficult to say whether it was strictly better or simply complementary, since they were not evaluated on identical sets of functions. I am not about to burn through a large pile of tokens to run a controlled experiment. Anecdotally, though, the simpler approach performed at least as well as my more elaborate one.
+I ended up adding Coddog scoring alongside my own approach. It's difficult to say whether they were strictly better or simply complementary, since they were not evaluated on identical sets of functions. Anecdotally, though, the simpler approach performed at least as well as my more elaborate one.
 
 ## Skills and Tooling
 
-Specialised tooling can make a big difference to Claude's performance. The project uses a number of Claude skills but two were particularly notable: decomp-permuter and `gfxdis.f3dex2`.
+Specialised tooling can make a big difference to Claude's performance. The project uses a number of Claude skills but two were particularly notable: `gfxdis.f3dex2`  and decomp-permuter.
+
+### F3Dex Tooling and Documentation
+
+The N64 has a dedicated graphics chip, the Reality Display Processor (RDP). Games execute microcode on the RDP to render graphics on the screen.
+
+Games have considerable flexibility in how they use the RDP, but most opt for an off-the-shelf library provided by Nintendo. If your game doesn't do this, you need to reverse engineer a company's idiosyncratic microcode in addition to the game itself. Thankfully, Snowboard Kids 2 opted for a Nintendo library, specifically [F3Dex2](https://ultra64.ca/files/documentation/online-manuals/man/pro-man/pro25/index25.4.html).
+
+After loading their desired microcode library, games send instructions to the RDP via display lists. Conceptually, display lists are just arrays of bytes representing microcode instructions, but they're a headache for decompilers. Games often build them dynamically using macros that may invoke other macros or perform complex bit arithmetic. The compiler then optimises and reorganises this logic, making it difficult to discern what the original developers actually wrote.
+
+![simplified example of basic C decompiled code being transformed into proper F3Dex2 instructions](/f3dex-function.svg#darksafe "‌A simplified example of what an F3Dex2 call might look like as decompiled C, then how it could in turn be disassembled into F3Dex2 instructions, and ultimately how (with full knowledge of the API) it's actually just a single texture load.")
+
+Agents are smart, but this is a highly domain-specific and context-specific scenario. It's a clear use-case for a Claude skill.[^1] I provided Claude with a [reference for F3Dex2 commands](https://github.com/cdlewis/snowboardkids2-decomp/blob/aead56b997d0b8dfaa1e920da857351b6e43f007/tools/claude-decomp-env/f3dex2-reference.md), a tool to disassemble hex values into specific commands (gfxdis.f3dex2), and some strategies for handling more specific edge cases such as aggregate commands. Unsurprisingly, this made Claude far more effective at recognising and decompiling F3Dex2 code.
 
 ### Permuters
 
@@ -55,16 +67,6 @@ Permuters happily introduce strange code: illogical variable reuse, `do {} while
 Claude, unfortunately, tended to treat these artefacts as signal. It would start optimising around permuter-induced noise, leading to doom loops and token burn with little real progress.
 
 After a few attempts to rein this in, I removed the permuter entirely. The occasional win did not justify the cleanup cost or the instability it introduced. It also made manual intervention harder, since the codebase would drift into awkward, overfitted forms that no human would willingly write.
-
-### F3Dex Tooling and Documentation
-
-The N64 has a dedicated graphics chip, the Reality Display Processor (RDP). Games execute microcode on the RDP to render graphics on the screen. They have a lot of flexibility in terms of how they want to use the RDP, but most games just opt for an off-the-shelf library provided by Nintendo. If your game doesn't do this, you need to reverse engineer a company's idiosyncratic microcode in addition to the game itself. Thankfully, Snowboard Kids 2 opted for a Nintendo library, specifically [F3Dex2](https://ultra64.ca/files/documentation/online-manuals/man/pro-man/pro25/index25.4.html).
-
-After loading their desired microcode library, games send instructions to the RDP via display lists. Conceptually, display lists are just arrays of bytes representing microcode instructions, but they're a headache for decompilers. Games often build them dynamically using macros that may invoke other macros or perform complex bit arithmetic. The compiler then optimises and reorganises this logic, making it difficult to discern what the original developers actually wrote.
-
-![simplified example of basic C decompiled code being transformed into proper F3Dex2 instructions](/f3dex-function.svg#darksafe "‌A simplified example of what an F3Dex2 call might look like as decompiled C, then how it could in turn be disassembled into F3Dex2 instructions, and ultimately how (with full knowledge of the API) it's actually just a single texture load.")
-
-Agents are smart, but this is a highly domain-specific and context-specific scenario. It's a clear use-case for a Claude skill.[^1] I provided Claude with a [reference for F3Dex2 commands](https://github.com/cdlewis/snowboardkids2-decomp/blob/aead56b997d0b8dfaa1e920da857351b6e43f007/tools/claude-decomp-env/f3dex2-reference.md), a tool to disassemble hex values into specific commands (gfxdis.f3dex2), and some strategies for handling more specific edge cases such as aggregate commands. Unsurprisingly, this made Claude far more effective at recognising and decompiling F3Dex2 code.
 
 ## Cleanup and Documentation
 
@@ -112,7 +114,7 @@ Hooks proved invaluable for preventing this behaviour and guiding the agent. Hoo
 - Block Claude from building the project in any way other than `build-and-verify.sh`; and
 - Block Claude from trying to edit automatically generated files.
 
-Hooks have significantly reduced how often Claude attempts something misguided or destructive, though they are not perfect. Claude can be very persistent when it **really** wants to do something. I've seen Claude run the contents of a `make` command when `make` itself is blocked, or write a Python script to edit a file it's been told it can't edit. But hooks at least offer better enforcement than prompting alone.
+Hooks have significantly reduced the frequency with which Claude attempts misguided or destructive actions, though they are not perfect. Claude can be very persistent when it **really** wants to do something. I've seen Claude run the contents of a `make` command when `make` itself is blocked, or write a Python script to edit a file it's been told it can't edit. But hooks at least offer better enforcement than prompting alone.
 
 ### Task Orchestration with Nigel the Cat
 
@@ -150,7 +152,7 @@ Work on the remaining unmatched functions required more attempts, more intermedi
 
 GLM, an open-weight model from z.ai, is generally considered [less capable](https://z.ai/blog/glm-5) than Opus. But it's dramatically cheaper, offers generous token limits, and can act as a drop-in replacement for most of my workflows.
 
-So glaude was born: a thin wrapper that looks like Claude but quietly points at a GLM backend.
+Thus glaude was born: a thin wrapper that looks like Claude but quietly points at a GLM backend.
 
 I usually try glaude first, or reach for it when I know the task is mechanical. Cleanup passes, refactors, documentation loops: none of these really need frontier reasoning. I'd rather preserve Opus tokens for the genuinely difficult work. It's not perfect. Opus has cracked problems GLM couldn't. But it lets me run agents without constantly worrying about weekly quotas, which makes the whole system far more sustainable.
 
