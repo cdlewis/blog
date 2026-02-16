@@ -1,6 +1,6 @@
 +++
 title = "The Long Tail of LLM-Assisted Decompilation"
-date = "2026-02-14T12:44:27-05:00"
+date = "2026-02-15T12:44:27-05:00"
 description = "After rapid advances thanks to one-shot decompilation, progress on the Snowboard Kids 2 decompilation began to falter. This post explores the workflow evolution, tooling improvements, and fundamental LLM limits that emerged when tackling the long tail of increasingly difficult functions."
 images = ['function-embeddings-header.jpg']
 draft = false 
