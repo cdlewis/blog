@@ -1,6 +1,6 @@
 +++
 title = "The Long Tail of LLM-Assisted Decompilation"
-date = "2026-02-15T12:44:27-05:00"
+date = "2026-02-16T09:44:27-05:00"
 description = "After rapid advances thanks to one-shot decompilation, progress on the Snowboard Kids 2 decompilation began to falter. This post explores the workflow evolution, tooling improvements, and fundamental LLM limits that emerged when tackling the long tail of increasingly difficult functions."
 images = ['function-embeddings-header.jpg']
 draft = false 
@@ -36,7 +36,7 @@ My first attempt was to build a composite similarity score by hand. I combined:
 
 In hindsight, this was probably overcomplicated. There is already a tool that does something very similar: [Coddog](https://github.com/ethteck/coddog). Instead of feature engineering, it computes a bounded Levenshtein distance directly over opcode sequences, with aggressive early exits when similarity is impossible. The result is normalised to a similarity score between 0 and 1.
 
-I ended up adding Coddog scoring alongside my own approach. It's difficult to say whether they were strictly better or simply complementary, since they were not evaluated on identical sets of functions. Anecdotally, though, the simpler approach performed at least as well as my more elaborate one.
+On the remaining unmatched functions, Coddog and my own approach select different most-similar candidates in 90.6% of cases. I still use both. They were not evaluated on identical sets of functions, so it is difficult to say whether one is strictly better or whether they are simply complementary. Anecdotally, though, the simpler approach performs at least as well as my more elaborate one.
 
 ## Skills and Tooling
 
@@ -52,7 +52,7 @@ After loading their desired microcode library, games send instructions to the RD
 
 ![simplified example of basic C decompiled code being transformed into proper F3Dex2 instructions](/f3dex-function.svg#darksafe "‌A simplified example of what an F3Dex2 call might look like as decompiled C, then how it could in turn be disassembled into F3Dex2 instructions, and ultimately how (with full knowledge of the API) it's actually just a single texture load.")
 
-Agents are smart, but this is a highly domain-specific and context-specific scenario. It's a clear use-case for a Claude skill.[^1] I provided Claude with a [reference for F3Dex2 commands](https://github.com/cdlewis/snowboardkids2-decomp/blob/aead56b997d0b8dfaa1e920da857351b6e43f007/tools/claude-decomp-env/f3dex2-reference.md), a tool to disassemble hex values into specific commands (gfxdis.f3dex2), and some strategies for handling more specific edge cases such as aggregate commands. Unsurprisingly, this made Claude far more effective at recognising and decompiling F3Dex2 code.
+Agents are smart, but this is a highly domain-specific and context-specific scenario. It's a clear use case for a Claude skill.[^1] I provided Claude with a [reference for F3Dex2 commands](https://github.com/cdlewis/snowboardkids2-decomp/blob/aead56b997d0b8dfaa1e920da857351b6e43f007/tools/claude-decomp-env/f3dex2-reference.md), a tool to disassemble hex values into specific commands (gfxdis.f3dex2), and some strategies for handling more specific edge cases such as aggregate commands. Unsurprisingly, this made Claude far more effective at recognising and decompiling F3Dex2 code.
 
 ### Permuters
 
@@ -142,9 +142,14 @@ Some of my favourite Nigel features are:
 
 #### What about Ralph Wiggum?
 
-It's hard to discuss Claude workflows without mentioning [Ralph Wiggum](https://ghuntley.com/ralph/). Like Ralph, Nigel can repeatedly prompt Claude with the same task via `--repeat` until it succeeds. The difference is that Nigel works in workflows and batch jobs. Tasks generate candidates and consume them one at a time, whereas Ralph simply replays the same prompt.
+It's hard to discuss Claude workflows without mentioning [Ralph Wiggum](https://ghuntley.com/ralph/). Like Ralph, Nigel can repeatedly prompt Claude with the same task via `--repeat` until it succeeds. The difference is that Nigel operates within structured workflows and batch jobs. Tasks generate candidates and consume them one at a time, whereas Ralph simply replays the same prompt.
 
-I experimented with larger repeat counts. My initial prompt imposed a 30-attempt cap, which may have been conservative, so I removed it. In practice, higher `--repeat` values didn't materially improve results. They just made each run take much longer. Claude giving up too early doesn't appear to be the bottleneck.
+My initial prompt capped the number of attempts at 30 to preserve tokens, which may have been conservative.
+
+I experimented with relaxing this limit and enabling `--repeat 3`. A small number of functions exceeded the previous 30-attempt cap. One required 87 attempts before Claude finally succeeded.
+
+In practice, higher `--repeat` values do help, but only at the extreme tail and at considerable token cost.
+The 85th percentile of successful attempts remains 28 attempts, meaning most functions complete within the original limit. For now, I’ve removed `--repeat 3` while leaving the number of attempts within a single prompt uncapped. That preserves headroom for rare outliers without multiplying token usage across the entire workload.
 
 ### Glaude and GLM's Generous Quotas
 
@@ -160,10 +165,11 @@ I usually try glaude first, or reach for it when I know the task is mechanical. 
 
 After all that engineering (similarity scoring, skills, hooks, orchestration, model routing), the curve ultimately flattened in early January. At that point, 157 functions remained. With continued work, that's now down to 124, but the dynamic has fundamentally changed.
 
-Two factors dominate:
+Three factors dominate:
 
-- Claude struggles badly with functions over around 500 instructions, and more or less gives up immediately beyond 1,000.
+- Claude struggles with large functions and more or less gives up immediately on those exceeding 1,000 instructions.
 - Graphics-heavy functions, especially those building display lists via macros, deeply confuse LLMs. Even with specialised tools, reversing macros from raw assembly is hard.
+- Maths functions, particularly matrix and vector transformations, seem to bamboozle Claude. Anecdotally, I've also seen other projects struggle with this. For example, I know that a function is computing the inverse square root. It's only 86 instructions long. But it has eluded Claude and me for months.
 
 Nigel the cat is still as busy as ever. There’s still work to be done, but matching functions has become much harder. At least until the next wave of frontier models is released.
 
