@@ -2,13 +2,13 @@ baseURL = 'https://blog.chrislewis.au'
 languageCode = 'en-au'
 title = "Chris' Blog"
 theme = 'hugo-bearblog'
-
 disableKinds = ["taxonomy"]
 ignoreErrors = ["error-disable-taxonomy"]
 
 [params]
 hideMadeWithLine = true
 description = "Various ramblings"
+enablePostNavigator = true
 
 [permalinks]
   blog = "/:slug/"

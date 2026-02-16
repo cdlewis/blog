@@ -163,6 +163,10 @@ Two factors dominate:
 - Claude struggles badly with functions over around 500 instructions, and more or less gives up immediately beyond 1,000.
 - Graphics-heavy functions, especially those building display lists via macros, deeply confuse LLMs. Even with specialised tools, reversing macros from raw assembly is hard.
 
-As a result, Nigel the cat isn't as busy these days. There's code to be matched and cleanup to be done, but the era of endless unattended Claude loops is over, for this project at least.
+Nigel the cat is still as busy as ever. There’s still work to be done, but matching functions has become much harder. At least until the next wave of frontier models is released.
+
+*If you’ve made it this far, you probably have an interest in decompilation and Snowboard Kids 2. Check out the [Snowboard Kids 2 decompilation project](https://github.com/cdlewis/snowboardkids2-decomp), and please reach out on Discord if you’d like to help.*
+
+**You can also [follow me on Bluesky](https://bsky.app/profile/chrislewis.au) for more Snowboard Kids 2 updates.**
 
 [^1]: I've gone back and forth between treating this as a Claude skill vs making it directly part of the CLAUDE.md for the decomp environment. As I was writing this blog post though, it did seem a little embarrassing not making it a skill, so I changed it back. 😶‍🌫️
