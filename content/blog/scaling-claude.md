@@ -163,6 +163,6 @@ Two factors dominate:
 - Claude struggles badly with functions over around 500 instructions, and more or less gives up immediately beyond 1,000.
 - Graphics-heavy functions, especially those building display lists via macros, deeply confuse LLMs. Even with specialised tools, reversing macros from raw assembly is hard.
 
-As a result, Nigel the cat doesn't do much these days. There's still documentation and cleanup to be done, but the era of endless unattended Claude loops is over, at least until a model arrives that can push past these limits.
+As a result, Nigel the cat isn't as busy these days. There's code to be matched and cleanup to be done, but the era of endless unattended Claude loops is over, for this project at least.
 
 [^1]: I've gone back and forth between treating this as a Claude skill vs making it directly part of the CLAUDE.md for the decomp environment. As I was writing this blog post though, it did seem a little embarrassing not making it a skill, so I changed it back. 😶‍🌫️
