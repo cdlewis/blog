@@ -156,7 +156,7 @@ I usually try glaude first, or reach for it when I know the task is mechanical. 
 
 ## 157 Functions
 
-After all that engineering (similarity scoring, skills, hooks, orchestration, model routing), the curve ultimately flattened in early January. At that point, 157 functions remained. With continued manual work, that's now down to 144, but the dynamic has fundamentally changed.
+After all that engineering (similarity scoring, skills, hooks, orchestration, model routing), the curve ultimately flattened in early January. At that point, 157 functions remained. With continued work, that's now down to 124, but the dynamic has fundamentally changed.
 
 Two factors dominate:
 
