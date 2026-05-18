@@ -41,7 +41,7 @@ That's already in a pretty good state thanks to help from [sonicdcer](https://gi
 
 There's also plenty of work left to do in the decompilation project itself. A 100% match doesn't mean the source is perfectly understood. Many functions still have generated names, many structures need to be cleaned up, and graphics/audio assets are still mostly treated as binary blobs. The project is now in a much better place for that work, but the work still needs doing.
 
-Finally, I'm interested in starting a _Snowboard Kids_ 1 decompilation. I think it would be extremely cool to make a 'Super Snowboard Kids'[^3] that combines both games and allows you to play all the original tracks on the second game's more modern engine. I have no idea how feasible that ultimately is, but it's a fun thing to think about.
+Finally, I'm interested in starting a _Snowboard Kids_ 1 decompilation. I think it would be very cool to have a 'Super Snowboard Kids'[^3] that combines both games and allows you to play all the original tracks on the second game's more modern engine. I have no idea how feasible that ultimately is, but it's a fun thing to think about.
 
 If you've made it this far, you probably have an interest in decompilation and _Snowboard Kids 2_. Take a look at the [Snowboard Kids 2 decompilation project](https://github.com/cdlewis/snowboardkids2-decomp). The README includes a list of good first tasks.
 
