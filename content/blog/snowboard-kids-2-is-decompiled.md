@@ -6,13 +6,13 @@ draft = false
 images = ['snowboardkids2-decomp-report.png']
 +++
 
-I'm very pleased to announce that _Snowboard Kids 2_ is officially 100% decompiled!
+I'm very pleased to announce that _Snowboard Kids 2_ is 100% decompiled!
 
 All of the game's functions have now been implemented in C and compile to assembly that matches the original game. There's still some occasional `__asm__` hackery,[^1] and plenty of code needs better names and documentation, but every function now has a matching C implementation.
 
 That matters because a matching decompilation turns the game from a pile of MIPS assembly into a codebase we can read, build, study, and modify. It should help with recompilation, asset extraction, modding, and generally understanding the mechanics of the N64's greatest game.
 
-![screenshot of the decomp.dev Snowboard Kids 2 decompilation report](/snowboardkids2-decomp-report.svg "Snowboard Kids 2 decompilation report from decomp.dev. Boxes represent different files.")
+[![screenshot of the decomp.dev Snowboard Kids 2 decompilation report](/snowboardkids2-decomp-report.svg "Snowboard Kids 2 decompilation report from decomp.dev. Boxes represent different files.")](https://decomp.dev/cdlewis/snowboardkids2-decomp)
 
 ## The journey
 
