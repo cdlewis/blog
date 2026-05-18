@@ -12,7 +12,7 @@ All of the game's functions have now been implemented in C and compile to assemb
 
 That matters because a matching decompilation turns the game from a pile of MIPS assembly into a codebase we can read, build, study, and modify. It should help with recompilation, asset extraction, modding, and generally understanding the mechanics of the N64's greatest game.
 
-![screenshot of the decomp.dev Snowboard Kids 2 decompilation report](/snowboardkids2-decomp-report.png)
+![screenshot of the decomp.dev Snowboard Kids 2 decompilation report](/snowboardkids2-decomp-report.svg)
 
 ## The journey
 
@@ -20,15 +20,15 @@ This project has been a little under two years in the making, with the [first co
 
 The circumstances surrounding the final matches were not quite what I expected when I started. I am currently sitting in hospital with my newborn daughter. She is doing fine, but needs some help eating. Decompilation has been a useful distraction and an enjoyable way to fill the quiet hours.
 
-![photo of me in the hospital with my daughter](/hospital.jpeg)
+![photo of me in the hospital with my daughter](/hospital.webp)
 
 The path to decompiling any game, let alone a Nintendo 64 game, is not especially well documented. This project would not have been possible without the N64 decompilation Discord community, whose members have been incredibly generous with their time. I would particularly like to thank [Bl00D4NGEL](https://github.com/Bl00D4NGEL), [inspectredc](https://github.com/inspectredc), [SlaveOfIDO](https://github.com/SlaveOfIDO), and [queueRAM](https://github.com/queueRAM) for their significant contributions to the project, especially across the final ten functions.
 
-![screenshot of the decomp.dev Snowboard Kids 2 leaderboard](/leaderboard.png "Leaderboard shared on discord for tracking work on the remaining Snowboard Kids 2 functions.")
+![screenshot of the decomp.dev Snowboard Kids 2 leaderboard](/leaderboard.webp "Leaderboard shared on discord for tracking work on the remaining Snowboard Kids 2 functions.")
 
-As I have written elsewhere on this blog, coding agents played an important role in the decompilation effort, particularly Claude, GLM, and Codex. I don't want to turn this into another AI blog post[^2], but I do want to record two observations while they are still fresh:
+As I have written elsewhere on this blog, coding agents played an important role in the decompilation effort, particularly Claude, GLM, and Codex. I don't want to turn this into another AI blog post[^2], but I do want to mention two observations while they are still fresh:
 
-1. Based on my experience with the last ten functions, the most effective model appeared to be Codex 5.5 xhigh. Historically Claude was more effective, and I expect this to keep changing, perhaps even by the time you read this.
+1. Based on my experience with the last ten functions, which were arguably difficult, the most effective model appeared to be Codex 5.5 xhigh. Historically Claude was more effective, and I expect this to keep changing, perhaps even by the time you read this.
 2. Frontier models are now very effective at decompilation, but this comes at a cost. GLM has probably been the best value for money for this specific kind of work. If you want to try coding agents on your own decompilation project but are put off by high subscription fees, that is where I would start.
 
 ## What next?
@@ -37,7 +37,7 @@ Reaching 100% decompilation was not technically blocking the recompilation effor
 
 That is already in a pretty good state thanks to help from [sonicdcer](https://github.com/sonicdcer) and [DarioSamo](https://github.com/DarioSamo), but there are still bugs to squash before I am comfortable releasing it.
 
-![screenshot of an alpha version of Snowboard Kids 2: Recompiled](/sbk2-recompiled-screenshot.png "Screenshot from Snowboard Kids 2: Recompiled. Note the use of widescreen and expanded draw distance. This can lead to some visual quirks.")
+![screenshot of an alpha version of Snowboard Kids 2: Recompiled](/sbk2-recompiled-screenshot.webp "Screenshot from Snowboard Kids 2: Recompiled. Note the use of widescreen and expanded draw distance. This can lead to some visual quirks.")
 
 There is also plenty of work left to do in the decompilation project itself. A 100% match does not mean the source is perfectly understood. Many functions still have generated names, many structures need to be cleaned up, and graphics/audio assets are still mostly treated as binary blobs. The project is now in a much better place for that work, but the work still needs doing.
 
