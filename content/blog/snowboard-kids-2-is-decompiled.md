@@ -26,7 +26,7 @@ The path to decompiling any game, let alone a Nintendo 64 game, is not especiall
 
 ![screenshot of the decomp.dev Snowboard Kids 2 leaderboard](/leaderboard.webp "Leaderboard shared on discord for tracking work on the remaining Snowboard Kids 2 functions.")
 
-As I've written elsewhere on this blog, coding agents played an important role in the decompilation effort, particularly Claude, GLM, and Codex. I don't want to turn this into another AI blog post[^2], but I do have a couple of observations:
+The community was more important than any model: people answered my dumb questions, explained tooling, and decompiled functions themselves. With that said, coding agents also greatly accelerated the decompilation effort, particularly Claude, GLM, and Codex. I don't want to turn this into another AI blog post[^2], but I do have a couple of observations:
 
 1. Based on my experience with the final ten functions, which were among the most difficult, the most effective model appeared to be Codex 5.5 xhigh. Historically Claude was more effective, and I expect this to keep changing, perhaps even by the time you read this.
 2. Frontier models are now very effective at decompilation, but this comes at a cost. GLM has probably been the best value for money for this specific kind of work. If you want to try coding agents on your own decompilation project but are put off by high subscription fees, that is where I would start.
