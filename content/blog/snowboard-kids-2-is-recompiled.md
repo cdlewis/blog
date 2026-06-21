@@ -1,6 +1,6 @@
 +++
 title = "Snowboard Kids 2 is Recompiled"
-date = "2026-06-20T9:00:00-07:00"
+date = "2026-06-21T13:00:00-07:00"
 description = "Snowboard Kids 2 has been recompiled for modern platforms, bringing widescreen, 60 FPS support, and modding to Snow Town."
 images = ["launcher.jpg"]
 default = false
