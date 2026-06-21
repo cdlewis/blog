@@ -1,6 +1,6 @@
 +++
 title = "Snowboard Kids 2 is Recompiled"
-date = "2026-06-21T9:00:00-07:00"
+date = "2026-06-20T9:00:00-07:00"
 description = "Snowboard Kids 2 has been recompiled for modern platforms, bringing widescreen, 60 FPS support, and modding to Snow Town."
 images = ["launcher.jpg"]
 default = false
@@ -54,11 +54,11 @@ The runtime can also be an avenue for enhancements. For example, RT64 interpolat
 
 ## How much work is required?
 
-N64: Recompiled certainly lowered the barrier for recompilations, but a lower barrier is not the same as an easy path. My first attempt at recompilation in 2024 failed because my decompilation was too immature. To recompile the game, you need to know what is code and what is data. You need to understand which functions are game functions and which ones are part of the N64 standard library. You need to identify places where the generated code needs special handling. And when something breaks, you are unlikely to understand the bug, let alone fix it, unless the relevant part of the game has been decompiled and understood.
+N64: Recompiled certainly lowered the barrier for recompilations, but it is still by no means easy. My first attempt at recompilation in 2024 failed because my decompilation was too immature. To recompile the game, you need to know what is code and what is data. You need to understand which functions are game functions and which ones are part of the N64 standard library. You need to identify places where the generated code needs special handling. And when something breaks, you are unlikely to understand the bug, let alone fix it, unless the relevant part of the game has been decompiled and understood.
 
 With that said, many popular games have some kind of active decompilation effort and I would expect the number of recompilations to rapidly increase over the next few years.
 
-It’s also really cool to see less well-known games get some attention, with hundreds of hours collectively being put into decompiling and recompiling games such as:
+It’s also really cool to see less well-known games get some attention, with hundreds of hours collectively being put into decompiling games such as:
 
 * [Neon Genesis: Evangelion 64](https://github.com/farisawan-2000/evangelion), based on the cult-favourite anime;
 * [The F-Zero X Expansion Kit](https://github.com/inspectredc/fzerox-expansion-kit) for the Nintendo 64DD; and
@@ -66,11 +66,11 @@ It’s also really cool to see less well-known games get some attention, with hu
 
 [![F-Zero X expansion kit for the ill-fated Nintendo 64DD. Picture from Spawn Wave’s Youtube channel (linked).](/f-zero-dd.webp "F-Zero X expansion kit for the ill-fated Nintendo 64DD. Picture from Spawn Wave’s Youtube channel (linked).")](https://www.youtube.com/watch?v=mJSLqU2KjGM&feature=youtu.be)
 
-Once you have a sufficiently decompiled game, the basic strategy, and path of least resistance, taken by many recomps is to copy/pasta one that already exists (usually Zelda) and adapt it for the new game. Usually with copious amounts of LLM tokens.[^4] Indeed, you’ll still see references to Zelda, and perhaps Star Fox 64, in the scaffold code for the Snowboard Kids recompilation.
+Once you have a sufficiently decompiled game, the basic strategy, and path of least resistance, taken by many recomps is to copy/pasta one that already exists (usually Zelda) and adapt it for the new game.[^4] Indeed, you’ll still see references to Zelda, and perhaps Star Fox 64, in the scaffold code for the Snowboard Kids recompilation.
 
 Snowboard Kids 2 is, from what I can gather, considered fairly straightforward on the recompilation difficulty curve (although still quite challenging for me). It uses common patterns and common microcode such as F3DEX2, but this does not mean it was automatic.
 
-N64 Modern Runtime helps us avoid the hassle of a source port, but the resulting game can sometimes behave in unexpected ways. For example: Slash briefly having a hole in his head. Without explicit annotations, the renderer has to guess which draw calls are related across frames and whether they should be interpolated. That heuristic works surprisingly well, but character animation can move suddenly, especially when Slash jumps. In this case RT64 decided not to interpolate part of the model, so the character briefly pulled apart.
+N64 Modern Runtime helps us avoid the hassle of a source port, but the resulting game can sometimes behave in unexpected ways. Poor Slash, for example, initially had a hole in his head! Without explicit annotations, the renderer has to guess which draw calls are related across frames and whether they should be interpolated. That heuristic works surprisingly well, but character animation can move suddenly, especially when Slash jumps. In this case RT64 decided not to interpolate part of the model, so the character could briefly be pulled apart.
 
 ![Picture of Slash with a hole in his head](/slash-hole-head.png "Picture of Slash with a hole in his head.")
 
@@ -112,6 +112,6 @@ I’ve also started work on [decompiling Snowboard Kids 1](https://github.com/cd
 
 [^3]: Summoning Salt video when?
 
-[^4]: Much to the chagrin of the community as these often result in buggy, low-quality ports.
+[^4]: Usually with copious amounts of LLM tokens, much to the chagrin of the community as these often result in buggy, low-quality ports.
 
 [^5]: They seem to prefer SBK1’s physics and skill system.
