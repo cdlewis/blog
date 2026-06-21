@@ -42,9 +42,9 @@ ctx->r4 = ADD32(ctx->r4, 0x20);
 
 The resulting code is not pretty, but operating on the assembly directly bypasses the need for a full decompilation. Indeed, work started on the recompilation while the Snowboard Kids 2 decompilation was only about 75% complete.
 
-The generated C code, along with any additional patches, is linked together with a runtime that speaks ‘N64’. The resulting binary is what constitutes the recompiled game.[^2]
+The generated C code, along with any additional patches, is linked together with a runtime and the resulting binary is what constitutes the recompiled game.[^2]
 
-The runtime part is a little interesting and worth digging into further. While functions are compiled natively, they still expect access to the same old N64 environment. For example, they will still try to build an F3DEX2 display list and submit it to the N64 graphics pipeline. A suitable runtime is needed to take those calls and translate them into Direct3D, Vulkan, Metal, and so on.
+The runtime acts as an interface between the native code and the N64 environment it still expects to exist. While functions are compiled natively, they still try to build things like F3DEX2 display lists and submit them to the N64 graphics pipeline. A suitable runtime is needed to take those calls and translate them into Direct3D, Vulkan, Metal, and so on.
 
 This is usually [N64 Modern Runtime](https://github.com/N64Recomp/N64ModernRuntime), though the iceberg of supporting libraries runs deep. Packages such as ultramodern, librecomp and RT64 all play a role.
 
