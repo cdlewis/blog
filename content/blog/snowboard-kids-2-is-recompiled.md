@@ -1,7 +1,7 @@
 +++
 title = "Snowboard Kids 2 is Recompiled"
-date = "2026-06-18T19:32:05-07:00"
-description = "The Snowboard Kids 2 recompilation is in a good state and publicly available for download."
+date = "2026-06-20T19:32:05-07:00"
+description = "Snowboard Kids 2 has been recompiled for modern platforms, bringing widescreen, 60 FPS support, and modding to Snow Town."
 images = ["launcher.jpg"]
 default = false
 +++
@@ -12,7 +12,7 @@ Following the completion of the [Snowboard Kids 2 decompilation](https://blog.ch
 
 ![screenshot of the Snowboard Kids 2 game launcher](/launcher.webp "Snowboard Kids 2 launcher. Artwork by Moz and Jellsoup.")
 
-A recompilation, as the name suggests, aims to compile the original N64 game code directly for modern architectures, rather than running the game by using an emulator to simulate the original system hardware. This has a number of benefits:
+A recompilation, as the name suggests, translates the original N64 game binary into native code for modern platforms before the game is run, rather than relying on an emulator to interpret the original system at runtime. This has a number of benefits:
 
 * **High frame rate support**: the recompilation can run at 60 frames per second by leveraging RT64’s frame interpolation technology.
 * **Widescreen and ultrawide support**: by tweaking the camera, most 3D scenes can be extended to 16:9 and wider aspect ratios without requiring major game changes. HUD elements have also been updated to take advantage of the additional space.
