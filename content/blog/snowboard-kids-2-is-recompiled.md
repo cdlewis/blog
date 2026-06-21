@@ -6,9 +6,9 @@ images = ["launcher.jpg"]
 default = false
 +++
 
-**TL;DR: [Snowboard Kids 2: Recompiled](https://github.com/cdlewis/snowboardkids2-recomp/releases/tag/v1.0.3) is available for Linux, Mac and Windows.**
+**TL;DR: [Snowboard Kids 2: Recompiled](https://github.com/cdlewis/snowboardkids2-recomp/releases/tag/v1.0.5) is available for Linux, Mac and Windows.**
 
-Following the completion of the [Snowboard Kids 2 decompilation](https://blog.chrislewis.au/snowboard-kids-2-is-100-decompiled/), I’ve been focused[^1] on getting the *recompilation* into a good state. Now that the worst bugs have been squashed, I’m pleased to announce the public release of [Snowboard Kids 2: Recompiled](https://github.com/cdlewis/snowboardkids2-recomp/releases/tag/v1.0.3). This recomp is only possible thanks to support from the [N64 Recomp Community](https://discord.gg/AWZThJ4dPf). I’m particularly grateful to sonicdcer and Darío for their help bootstrapping the project, fixing bugs, and patiently explaining things to me. The artwork was contributed by [Snowboard Kids Discord](https://discord.gg/bwQ85rUED) members Moz and Jellsoup.
+Following the completion of the [Snowboard Kids 2 decompilation](https://blog.chrislewis.au/snowboard-kids-2-is-100-decompiled/), I’ve been focused[^1] on getting the *recompilation* into a good state. Now that the worst bugs have been squashed, I’m pleased to announce the public release of [Snowboard Kids 2: Recompiled](https://github.com/cdlewis/snowboardkids2-recomp/releases/tag/v1.0.5). This recomp is only possible thanks to support from the [N64 Recomp Community](https://discord.gg/AWZThJ4dPf). I’m particularly grateful to sonicdcer and Darío for their help bootstrapping the project, fixing bugs, and patiently explaining things to me. The artwork was contributed by [Snowboard Kids Discord](https://discord.gg/bwQ85rUED) members Moz and Jellsoup.
 
 ![screenshot of the Snowboard Kids 2 game launcher](/launcher.webp "Snowboard Kids 2 launcher. Artwork by Moz and Jellsoup.")
 
@@ -102,7 +102,7 @@ Then that understanding can be used to improve the decompilation through better 
 
 I’ve also started work on [decompiling Snowboard Kids 1](https://github.com/cdlewis/snowboardkids-decomp). I was surprised to learn it’s the more popular game in the speedrunning community.[^5] Aside from understanding the original game better, I’m hoping it will eventually be possible to create a definitive version of Snowboard Kids that ties together the more modern SBK2 engine with the levels from the original game. And perhaps even the PlayStation version, which featured additional content, albeit with a worse player experience due to hardware limitations.
 
-**Download [Snowboard Kids 2: Recompiled](https://github.com/cdlewis/snowboardkids2-recomp/releases/tag/v1.0.3).**
+**Download [Snowboard Kids 2: Recompiled](https://github.com/cdlewis/snowboardkids2-recomp/releases/tag/v1.0.5).**
 
 **You can also [follow me on Bluesky](https://bsky.app/profile/chrislewis.au) for more Snowboard Kids 2 updates.**
 
