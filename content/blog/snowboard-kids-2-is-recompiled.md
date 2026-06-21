@@ -6,9 +6,9 @@ images = ["launcher.jpg"]
 default = false
 +++
 
-**TL;DR: [Snowboard Kids 2: Recompiled](https://github.com/cdlewis/snowboardkids2-recomp/releases/tag/v1.0.1) is available for Linux, Mac and Windows.**
+**TL;DR: [Snowboard Kids 2: Recompiled](https://github.com/cdlewis/snowboardkids2-recomp/releases/tag/v1.0.3) is available for Linux, Mac and Windows.**
 
-Following the completion of the [Snowboard Kids 2 decompilation](https://blog.chrislewis.au/snowboard-kids-2-is-100-decompiled/), I’ve been focused[^1] on getting the *recompilation* into a good state. Now that the worst bugs have been squashed, I’m pleased to announce the public release of [Snowboard Kids 2: Recompiled](https://github.com/cdlewis/snowboardkids2-recomp/releases/tag/v1.0.0). This recomp is only possible thanks to support from the [N64 Recomp Community](https://discord.gg/AWZThJ4dPf). I’m particularly grateful to sonicdcer and Darío for their help bootstrapping the project, fixing bugs, and patiently explaining things to me. The artwork was contributed by [Snowboard Kids Discord](https://discord.gg/bwQ85rUED) members Moz and Jellsoup.
+Following the completion of the [Snowboard Kids 2 decompilation](https://blog.chrislewis.au/snowboard-kids-2-is-100-decompiled/), I’ve been focused[^1] on getting the *recompilation* into a good state. Now that the worst bugs have been squashed, I’m pleased to announce the public release of [Snowboard Kids 2: Recompiled](https://github.com/cdlewis/snowboardkids2-recomp/releases/tag/v1.0.3). This recomp is only possible thanks to support from the [N64 Recomp Community](https://discord.gg/AWZThJ4dPf). I’m particularly grateful to sonicdcer and Darío for their help bootstrapping the project, fixing bugs, and patiently explaining things to me. The artwork was contributed by [Snowboard Kids Discord](https://discord.gg/bwQ85rUED) members Moz and Jellsoup.
 
 ![screenshot of the Snowboard Kids 2 game launcher](/launcher.png "Snowboard Kids 2 launcher. Artwork by Moz and Jellsoup.")
 
@@ -16,7 +16,7 @@ A recompilation, as the name suggests, aims to compile the original N64 game cod
 
 * **High frame rate support**: the recompilation can run at 60 frames per second by leveraging RT64’s frame interpolation technology.
 * **Widescreen and ultrawide support**: by tweaking the camera, most 3D scenes can be extended to 16:9 and wider aspect ratios without requiring major game changes. HUD elements have also been updated to take advantage of the additional space.
-* **Mod support**: N64ModernRuntime and the recompilation tooling make it easy modify extend the game.
+* **Mod support**: N64ModernRuntime and the recompilation tooling make it easier to modify and extend the game.
 
 ![screenshot of Snowboard Kids 2: Recompiled in action](/recomp-screenshot.png "Screenshot of the recompilation in action. Note the widescreen view and HUD. As for the placement, I’m just sandbagging to get better items, I swear 🙃.")
 
@@ -70,17 +70,17 @@ Once you have a sufficiently decompiled game, the basic strategy, and path of le
 
 Snowboard Kids 2 is, from what I can gather, considered fairly straightforward on the recompilation difficulty curve (although still quite challenging for me). It uses common patterns and common microcode such as F3DEX2, but this does not mean it was automatic.
 
-N64 Modern Runtime helps us avoid the hassle of a source port, but the resulting game can sometimes behave in unexpected ways. Such as Slash having a hole in his head! Without explicit annotations, the renderer has to guess which draw calls are related across frames and whether they should be interpolated. That heuristic works surprisingly well, but character animation can move suddenly, especially when Slash jumps. In this case RT64 decided not to interpolate part of the model, so the character briefly pulled apart.
+N64 Modern Runtime helps us avoid the hassle of a source port, but the resulting game can sometimes behave in unexpected ways. For example: Slash briefly having a hole in his head. Without explicit annotations, the renderer has to guess which draw calls are related across frames and whether they should be interpolated. That heuristic works surprisingly well, but character animation can move suddenly, especially when Slash jumps. In this case RT64 decided not to interpolate part of the model, so the character briefly pulled apart.
 
 ![Picture of Slash with a hole in his head](/slash-hole-head.png "Picture of Slash with a hole in his head.")
 
-The fix was fairly straightforward, we just needed label related matrices and mark them for simple interpolation, so RT64 knows both that they belong together and that it should not try to decompose them.
+The fix was fairly straightforward: we just needed to label related matrices and mark them for simple interpolation, so RT64 knows both that they belong together and that it should not try to decompose them.
 
 Other issues came from the game itself doing something unusual. One especially spicy early bug manifested as extreme screen flickering. I was nowhere near clever enough to debug this on my own, but Darío was able to identify the issue as being caused by the way the game switched RSP microcode during frame rendering.
 
 ![diagram of Snowboard Kids 2 switching RSP microcode between 3D and 2D rendering](/microcode-switching.svg "Snowboard Kids 2 uses different RSP microcode for 3D and 2D rendering.")
 
-It turns out that each frame the game was dispatching multiple graphics tasks, at least one per set of microcode, and sometimes multiple tasks for the same microcode. The original game switches between them by ending one graphics task and submitting another with different microcode. Each of those generated wrapper display lists ends with a `gDPFullSync`, so a frame with multiple 3D and 2D groups can produce multiple full syncs.
+It turns out that each frame the game was dispatching multiple graphics tasks: at least one per set of microcode, and sometimes multiple tasks for the same microcode. The original game switches between them by ending one graphics task and submitting another with different microcode. Each of those generated wrapper display lists ends with a `gDPFullSync`, so a frame with multiple 3D and 2D groups can produce multiple full syncs.
 
 That is a problem because RT64 can only interpolate frames correctly when there is one `gDPFullSync` per frame. The result was flickering bad enough to make parts of the game unplayable.
 
@@ -98,11 +98,11 @@ I’m also particularly excited about modding. I already have a basic Time Trial
 
 Aside from the cool new functionality it can help unlock, I’m hopeful modding will create a virtuous cycle between the recompilation and the decompilation. Modding is goal-oriented in a way that pure documentation often is not. You want to change one specific thing: the coin count, the timer, the item rules, the level list. To do that, you have to understand that slice of the codebase. Maybe the field you need is buried three functions deep and still called `unk78C`. You will figure it out because you are motivated to make the thing work.
 
-Then that understanding can be leveraged to improve the decompilation through improved function names, structure fields, etc. This information in turn assists with future modding. I’ve already found myself doing in this loop while messing around with test mods.
+Then that understanding can be used to improve the decompilation through better function names, structure fields, and documentation. This information in turn assists with future modding. I’ve already found myself in this loop while messing around with test mods.
 
-I’ve also started work on [decompiling Snowboard Kids 1](https://github.com/cdlewis/snowboardkids-decomp). I was surprised to learn it’s the more popular game in the speed-running community.[^5] Aside from understanding the original game better, I’m hoping it will eventually be possible to create a definitive version of Snowboard Kids that ties together the more modern SBK2 engine with the levels from the original game. And perhaps even the PlayStation version, which featured additional content, albeit with a worse player experience due to hardware limitations.
+I’ve also started work on [decompiling Snowboard Kids 1](https://github.com/cdlewis/snowboardkids-decomp). I was surprised to learn it’s the more popular game in the speedrunning community.[^5] Aside from understanding the original game better, I’m hoping it will eventually be possible to create a definitive version of Snowboard Kids that ties together the more modern SBK2 engine with the levels from the original game. And perhaps even the PlayStation version, which featured additional content, albeit with a worse player experience due to hardware limitations.
 
-**Download [Snowboard Kids 2: Recompiled](https://github.com/cdlewis/snowboardkids2-recomp/releases/tag/v1.0.1).**
+**Download [Snowboard Kids 2: Recompiled](https://github.com/cdlewis/snowboardkids2-recomp/releases/tag/v1.0.3).**
 
 **You can also [follow me on Bluesky](https://bsky.app/profile/chrislewis.au) for more Snowboard Kids 2 updates.**
 
