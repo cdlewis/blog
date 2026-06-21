@@ -54,7 +54,7 @@ The runtime can also be an avenue for enhancements. For example, RT64 interpolat
 
 ## How much work is required?
 
-N64: Recompiled certainly lowered the barrier for recompilations, but it is still by no means easy. My first attempt at recompilation in 2024 failed because my decompilation was too immature. To recompile the game, you need to know what is code and what is data. You need to understand which functions are game functions and which ones are part of the N64 standard library. You need to identify places where the generated code needs special handling. And when something breaks, you are unlikely to understand the bug, let alone fix it, unless the relevant part of the game has been decompiled and understood.
+N64: Recompiled certainly lowered the barrier for recompilations, but that does not make it easy. My first attempt in 2024 failed because the decompilation was still too immature. To recompile the game, you need to know what is code and what is data. You need to understand which functions are game functions and which ones are part of the N64 standard library. You need to identify places where the generated code needs special handling. And when something breaks, you are unlikely to understand the bug, let alone fix it, unless the relevant part of the game has been decompiled and understood.
 
 With that said, many popular games have some kind of active decompilation effort and I would expect the number of recompilations to rapidly increase over the next few years.
 
@@ -64,7 +64,7 @@ It’s also really cool to see less well-known games get some attention, with hu
 * [The F-Zero X Expansion Kit](https://github.com/inspectredc/fzerox-expansion-kit) for the Nintendo 64DD; and
 * [Dinosaur Planet](https://github.com/zestydevy/dinosaur-planet), an unreleased Rareware game that eventually became [Star Fox Adventures](https://github.com/zcanann/SFA-Decomp) on the GameCube.
 
-[![F-Zero X expansion kit for the ill-fated Nintendo 64DD. Picture from Spawn Wave’s Youtube channel (linked).](/f-zero-dd.webp "F-Zero X expansion kit for the ill-fated Nintendo 64DD. Picture from Spawn Wave’s Youtube channel (linked).")](https://www.youtube.com/watch?v=mJSLqU2KjGM&feature=youtu.be)
+[![F-Zero X expansion kit for the ill-fated Nintendo 64DD. Picture from Spawn Wave’s YouTube channel (linked).](/f-zero-dd.webp "F-Zero X expansion kit for the ill-fated Nintendo 64DD. Picture from Spawn Wave’s YouTube channel (linked).")](https://www.youtube.com/watch?v=mJSLqU2KjGM&feature=youtu.be)
 
 Once you have a sufficiently decompiled game, the basic strategy, and path of least resistance, taken by many recomps is to copy/pasta one that already exists (usually Zelda) and adapt it for the new game.[^4] Indeed, you’ll still see references to Zelda, and perhaps Star Fox 64, in the scaffold code for the Snowboard Kids recompilation.
 
@@ -112,6 +112,6 @@ I’ve also started work on [decompiling Snowboard Kids 1](https://github.com/cd
 
 [^3]: Summoning Salt video when?
 
-[^4]: Usually with copious amounts of LLM tokens, much to the chagrin of the community as these often result in buggy, low-quality ports.
+[^4]: Usually with copious amounts of LLM tokens, much to the chagrin of the community, as this often results in buggy, low-quality ports.
 
 [^5]: They seem to prefer SBK1’s physics and skill system.
