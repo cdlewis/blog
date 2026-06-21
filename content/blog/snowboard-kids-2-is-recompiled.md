@@ -10,7 +10,7 @@ default = false
 
 Following the completion of the [Snowboard Kids 2 decompilation](https://blog.chrislewis.au/snowboard-kids-2-is-100-decompiled/), I’ve been focused[^1] on getting the *recompilation* into a good state. Now that the worst bugs have been squashed, I’m pleased to announce the public release of [Snowboard Kids 2: Recompiled](https://github.com/cdlewis/snowboardkids2-recomp/releases/tag/v1.0.3). This recomp is only possible thanks to support from the [N64 Recomp Community](https://discord.gg/AWZThJ4dPf). I’m particularly grateful to sonicdcer and Darío for their help bootstrapping the project, fixing bugs, and patiently explaining things to me. The artwork was contributed by [Snowboard Kids Discord](https://discord.gg/bwQ85rUED) members Moz and Jellsoup.
 
-![screenshot of the Snowboard Kids 2 game launcher](/launcher.png "Snowboard Kids 2 launcher. Artwork by Moz and Jellsoup.")
+![screenshot of the Snowboard Kids 2 game launcher](/launcher.webp "Snowboard Kids 2 launcher. Artwork by Moz and Jellsoup.")
 
 A recompilation, as the name suggests, aims to compile the original N64 game code directly for modern architectures, rather than running the game by using an emulator to simulate the original system hardware. This has a number of benefits:
 
@@ -18,7 +18,7 @@ A recompilation, as the name suggests, aims to compile the original N64 game cod
 * **Widescreen and ultrawide support**: by tweaking the camera, most 3D scenes can be extended to 16:9 and wider aspect ratios without requiring major game changes. HUD elements have also been updated to take advantage of the additional space.
 * **Mod support**: N64ModernRuntime and the recompilation tooling make it easier to modify and extend the game.
 
-![screenshot of Snowboard Kids 2: Recompiled in action](/recomp-screenshot.png "Screenshot of the recompilation in action. Note the widescreen view and HUD. As for the placement, I’m just sandbagging to get better items, I swear 🙃.")
+![screenshot of Snowboard Kids 2: Recompiled in action](/recomp-screenshot.webp "Screenshot of the recompilation in action. Note the widescreen view and HUD. As for the placement, I’m just sandbagging to get better items, I swear 🙃.")
 
 ## The recompilation process
 
@@ -48,7 +48,7 @@ The runtime part is a little interesting and worth digging into further. While f
 
 This is usually [N64 Modern Runtime](https://github.com/N64Recomp/N64ModernRuntime), though the iceberg of supporting libraries runs deep. Packages such as ultramodern, librecomp and RT64 all play a role.
 
-![overview of the recompilation stack](/recomp-stack.svg "Overview of the recompilation stack. Note that mods and patches are different beasts, with mods being dynamically compiled on game start rather than going through the static flow above.")
+![overview of the recompilation stack](/recomp-stack.svg#darksafe "Overview of the recompilation stack. Note that mods and patches are different beasts, with mods being dynamically compiled on game start rather than going through the static flow above.")
 
 The runtime can also be an avenue for enhancements. For example, RT64 interpolates between the draw calls emitted by the game for a given matrix to create new frames, allowing frame rates far in excess of what the original game could have handled. This approach neatly sidesteps the problem of side effects: the game is unaware of the new frames, so its internal logic and subsequent behaviour are unaltered. Looking further ahead, new runtime features such as ray tracing could potentially be added and then used by existing games that already run on that runtime.
 
@@ -64,7 +64,7 @@ It’s also really cool to see less well-known games get some attention, with hu
 * [The F-Zero X Expansion Kit](https://github.com/inspectredc/fzerox-expansion-kit) for the Nintendo 64DD; and
 * [Dinosaur Planet](https://github.com/zestydevy/dinosaur-planet), an unreleased Rareware game that eventually became [Star Fox Adventures](https://github.com/zcanann/SFA-Decomp) on the GameCube.
 
-[![F-Zero X expansion kit for the ill-fated Nintendo 64DD. Picture from Spawn Wave’s Youtube channel (linked).](/f-zero-dd.jpg "F-Zero X expansion kit for the ill-fated Nintendo 64DD. Picture from Spawn Wave’s Youtube channel (linked).")](https://www.youtube.com/watch?v=mJSLqU2KjGM&feature=youtu.be)
+[![F-Zero X expansion kit for the ill-fated Nintendo 64DD. Picture from Spawn Wave’s Youtube channel (linked).](/f-zero-dd.webp "F-Zero X expansion kit for the ill-fated Nintendo 64DD. Picture from Spawn Wave’s Youtube channel (linked).")](https://www.youtube.com/watch?v=mJSLqU2KjGM&feature=youtu.be)
 
 Once you have a sufficiently decompiled game, the basic strategy, and path of least resistance, taken by many recomps is to copy/pasta one that already exists (usually Zelda) and adapt it for the new game. Usually with copious amounts of LLM tokens.[^4] Indeed, you’ll still see references to Zelda, and perhaps Star Fox 64, in the scaffold code for the Snowboard Kids recompilation.
 
@@ -78,7 +78,7 @@ The fix was fairly straightforward: we just needed to label related matrices and
 
 Other issues came from the game itself doing something unusual. One especially spicy early bug manifested as extreme screen flickering. I was nowhere near clever enough to debug this on my own, but Darío was able to identify the issue as being caused by the way the game switched RSP microcode during frame rendering.
 
-![diagram of Snowboard Kids 2 switching RSP microcode between 3D and 2D rendering](/microcode-switching.svg "Snowboard Kids 2 uses different RSP microcode for 3D and 2D rendering.")
+![diagram of Snowboard Kids 2 switching RSP microcode between 3D and 2D rendering](/microcode-switching.svg#darksafe "Snowboard Kids 2 uses different RSP microcode for 3D and 2D rendering.")
 
 It turns out that each frame the game was dispatching multiple graphics tasks: at least one per set of microcode, and sometimes multiple tasks for the same microcode. The original game switches between them by ending one graphics task and submitting another with different microcode. Each of those generated wrapper display lists ends with a `gDPFullSync`, so a frame with multiple 3D and 2D groups can produce multiple full syncs.
 
