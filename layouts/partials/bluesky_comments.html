@@ -7,6 +7,8 @@
 
 {{- if not ($.Page.Scratch.Get "bluesky-comments-script") -}}
 {{- $.Page.Scratch.Set "bluesky-comments-script" true -}}
-<script defer src="{{ "js/bluesky-comments.js" | relURL }}"></script>
+{{- with resources.Get "js/bluesky-comments.js" | js.Build (dict "minify" (not hugo.IsDevelopment) "targetPath" "js/bluesky-comments.js") -}}
+<script defer src="{{ .RelPermalink }}"></script>
+{{- end -}}
 {{- end -}}
 {{- end -}}
