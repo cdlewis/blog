@@ -83,4 +83,55 @@
   .bluesky-comments__text {
     margin-top: 0.25rem;
   }
+
+  .blog-posts {
+    display: grid;
+    gap: 2rem;
+  }
+
+  .blog-post-card {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .blog-post-card__image-link {
+    display: block;
+  }
+
+  .blog-post-card__image {
+    aspect-ratio: 16 / 9;
+    border-radius: 6px;
+    display: block;
+    height: auto;
+    margin: 0;
+    object-fit: cover;
+    width: 100%;
+  }
+
+  .blog-post-card__date {
+    display: block;
+    margin-bottom: 0.35rem;
+    opacity: 0.78;
+  }
+
+  .blog-post-card__title {
+    font-size: 1.35em;
+    line-height: 1.25;
+    margin: 0;
+  }
+
+  .blog-post-card__title a:visited {
+    color: var(--visited-color);
+  }
+
+  .blog-post-card__excerpt {
+    margin: 0.6rem 0 0;
+  }
+
+  @media (min-width: 680px) {
+    .blog-post-card {
+      align-items: start;
+      grid-template-columns: minmax(220px, 0.9fr) minmax(0, 1.1fr);
+    }
+  }
 </style>

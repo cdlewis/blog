@@ -2,21 +2,37 @@
   {{ $posts := where site.RegularPages "Section" "blog" }}
   {{ $pag := .Paginate ($posts.ByDate.Reverse) }}
 
-
-  <ul class="blog-posts">
+  <section class="blog-posts">
   {{ range $pag.Pages }}
-    <li>
-      <span>
-        <i>
-          <time datetime='{{ .Date.Format "2006-01-02" }}'>
-            {{ .Date.Format (default "02 Jan, 2006" .Site.Params.dateFormat) }}
-          </time>
-        </i>
-      </span>
-      <a href="{{ .Permalink }}">{{ .Title }}</a>
-    </li>
+    {{ $post := . }}
+    {{ $image := "" }}
+    {{ with .Params.images }}
+      {{ $image = index . 0 }}
+    {{ end }}
+
+    <article class="blog-post-card">
+      {{ with $image }}
+        <a class="blog-post-card__image-link" href="{{ $post.RelPermalink }}" aria-label="{{ $post.Title }}">
+          <img class="blog-post-card__image" src="{{ . | relURL }}" alt="">
+        </a>
+      {{ end }}
+
+      <div class="blog-post-card__body">
+        <time class="blog-post-card__date" datetime='{{ .Date.Format "2006-01-02" }}'>
+          {{ .Date.Format (default "02 Jan, 2006" .Site.Params.dateFormat) }}
+        </time>
+
+        <h2 class="blog-post-card__title">
+          <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+        </h2>
+
+        <p class="blog-post-card__excerpt">
+          {{ with .Description }}{{ . }}{{ else }}{{ .Summary | plainify | truncate 180 }}{{ end }}
+        </p>
+      </div>
+    </article>
   {{ end }}
-  </ul>
+  </section>
 
   {{ template "_internal/pagination.html" . }}
 {{ end }}
