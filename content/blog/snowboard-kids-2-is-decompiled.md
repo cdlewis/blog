@@ -4,6 +4,7 @@ date = "2026-05-17T14:02:16-07:00"
 description = "Snowboard Kids 2 for the Nintendo 64 has reached 100% matching decompilation. A brief note on what that means, how we got here, and what comes next."
 draft = false 
 images = ['snowboardkids2-decomp-report.png']
+blueskyPostURL = "https://bsky.app/profile/chrislewis.au/post/3mm5mxwg7js22"
 +++
 
 I'm very pleased to announce that _Snowboard Kids 2_ is 100% decompiled!
@@ -44,8 +45,6 @@ There's also plenty of work left to do in the decompilation project itself. A 10
 Finally, I'm interested in starting a _Snowboard Kids_ 1 decompilation. I think it would be very cool to have a 'Super Snowboard Kids'[^3] that combines both games and allows you to play all the original tracks on the second game's more modern engine. I have no idea how feasible that ultimately is, but it's a fun thing to think about.
 
 If you've made it this far, you probably have an interest in decompilation and _Snowboard Kids 2_. Take a look at the [Snowboard Kids 2 decompilation project](https://github.com/cdlewis/snowboardkids2-decomp). The README includes a list of good first tasks.
-
-**You can also [follow me on Bluesky](https://bsky.app/profile/chrislewis.au) for more Snowboard Kids 2 updates.**
 
 [^1]: The project uses some targeted `__asm__` instructions to coerce variables into particular registers, ensure writes happen at the appropriate time, etc. Generally, these could be removed and the game would function in exactly the same way (albeit no longer byte-for-byte matching). Still, ideally this wouldn't be needed at all, and the long-term goal is to remove them.
 

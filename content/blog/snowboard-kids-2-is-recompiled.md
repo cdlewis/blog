@@ -4,6 +4,7 @@ date = "2026-06-21T12:00:00-07:00"
 description = "Snowboard Kids 2 has been recompiled for modern platforms, bringing widescreen, 60 FPS support, and modding to Snow Town."
 images = ["launcher.jpg"]
 default = false
+blueskyPostURL = "https://bsky.app/profile/chrislewis.au/post/3mot5zbxfbs2u"
 +++
 
 **TL;DR: [Snowboard Kids 2: Recompiled](https://github.com/cdlewis/snowboardkids2-recomp/releases/tag/v1.0.5) is available for Linux, Mac and Windows.**
@@ -103,8 +104,6 @@ Then that understanding can be used to improve the decompilation through better 
 I’ve also started work on [decompiling Snowboard Kids 1](https://github.com/cdlewis/snowboardkids-decomp). I was surprised to learn it’s the more popular game in the speedrunning community.[^5] Aside from understanding the original game better, I’m hoping it will eventually be possible to create a definitive version of Snowboard Kids that ties together the more modern SBK2 engine with the levels from the original game. And perhaps even the PlayStation version, which featured additional content, albeit with a worse player experience due to hardware limitations.
 
 **Download [Snowboard Kids 2: Recompiled](https://github.com/cdlewis/snowboardkids2-recomp/releases/tag/v1.0.5).**
-
-**You can also [follow me on Bluesky](https://bsky.app/profile/chrislewis.au) for more Snowboard Kids 2 updates.**
 
 [^1]: As well as the whole raising a 3-month-old thing 😅.
 

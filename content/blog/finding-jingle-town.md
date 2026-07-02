@@ -4,6 +4,7 @@ date = "2025-12-23T20:57:17+11:00"
 description = "Debuggers are an invaluable tool for decompilation but a lack of symbols can make it challenging to effectively use them. This post provides an overview of my own workflow applied to a seasonally appropriate problem: figuring out how the game loads Jingle Town."
 draft = false 
 images = ['jingle-town.jpg']
+blueskyPostURL = "https://bsky.app/profile/chrislewis.au/post/3maomtevfz22g"
 +++
 
 ![screenshot of the jingle town level in Snowboard Kids 2](/jingle-town.webp)
@@ -152,10 +153,6 @@ This workflow is effective but painfully manual. Short of being able to run a bu
 I also wonder whether it would be possible for a debugger to reference externally generated debug symbols without altering the binary itself. It doesn’t seem impossible in theory, even if it isn't something GDB supports in practice (as far as I can tell).
 
 That said, it’s genuinely satisfying to see the _Snowboard Kids 2_ decompilation reach a point where we can reason about higher-level game behaviour, like level initialisation, rather than just individual instructions. If you’ve made it this far, you probably have an interest in decompilation, debugging, and the unequalled brilliance of _Snowboard Kids 2_. _Check out the [Snowboard Kids 2 decompilation project](https://github.com/cdlewis/snowboardkids2-decomp)_, and feel free to reach out on Discord if you’re interested in helping.
-
-**You can also [follow me on Bluesky](https://bsky.app/profile/chrislewis.au) for more Snowboard Kids 2 updates.**
-
-## Footnotes
 
 [^1]: This is a deep rabbit hole. Compiled binaries typically use a standard debug encoding format called DWARF. Early approaches used hash tables for symbol mappings, but these massively inflated binary size, something that still matters even on modern systems. There’s also some fun lore: DWARF gets its name from the fictional creature (think Gimli), intended as a companion to the ELF binary format (think Legolas).
 [^2]: On the N64, overlays are chunks of code that are loaded and unloaded at runtime to save memory.

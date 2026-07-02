@@ -3,11 +3,13 @@
     margin: 0 auto;
     display: block;
   }
+
   @media (prefers-color-scheme: dark) {
     img[src$="#darksafe"] {
       filter: invert(1);
     }
   }
+
   .image-caption {
     font-size: calc(var(--font-scale) * 0.8);
     margin: 0px 20px;
@@ -15,7 +17,70 @@
     opacity: 0.9;
     text-align: center;
   }
+
   .highlight {
     background-color: rgb(39, 40, 34);
+  }
+
+  .bluesky-comments {
+    margin-top: 2.5rem;
+  }
+
+  .bluesky-comments h2 {
+    font-size: 1.25em;
+    margin-bottom: 0.5rem;
+  }
+
+  .bluesky-comments__status,
+  .bluesky-comments__summary {
+    font-size: calc(var(--font-scale) * 0.9);
+  }
+
+  .bluesky-comments__summary {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+  }
+
+  .bluesky-comments__reply {
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: 44px 1fr;
+    margin-top: 1rem;
+  }
+
+  .bluesky-comments__avatar {
+    aspect-ratio: 1;
+    border-radius: 50%;
+    display: block;
+    height: 44px;
+    object-fit: cover;
+    width: 44px;
+  }
+
+  .bluesky-comments__avatar--blank {
+    background: var(--blockquote-color);
+    opacity: 0.25;
+  }
+
+  .bluesky-comments__meta,
+  .bluesky-comments__text {
+    margin: 0;
+  }
+
+  .bluesky-comments__meta {
+    display: flex;
+    flex-wrap: wrap;
+    font-size: calc(var(--font-scale) * 0.85);
+    gap: 0.25rem 0.5rem;
+  }
+
+  .bluesky-comments__meta span {
+    opacity: 0.8;
+  }
+
+  .bluesky-comments__text {
+    margin-top: 0.25rem;
   }
 </style>

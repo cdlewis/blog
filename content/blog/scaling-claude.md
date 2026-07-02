@@ -4,6 +4,7 @@ date = "2026-02-16T09:44:27-05:00"
 description = "After rapid advances thanks to one-shot decompilation, progress on the Snowboard Kids 2 decompilation began to falter. This post explores the workflow evolution, tooling improvements, and fundamental LLM limits that emerged when tackling the long tail of increasingly difficult functions."
 images = ['function-embeddings-header.jpg']
 draft = false 
+blueskyPostURL = "https://bsky.app/profile/chrislewis.au/post/3meyokjf7zc2b"
 +++
 
 In my previous posts, I described [how coding agents could be used to decompile Nintendo 64 games](https://blog.chrislewis.au/using-coding-agents-to-decompile-nintendo-64-games/) and that [one-shot decompilation was very effective](/the-unexpected-effectiveness-of-one-shot-decompilation-with-claude/). That approach allowed me to make rapid progress on the [Snowboard Kids 2 decompilation](https://github.com/cdlewis/snowboardkids2-decomp), with the percentage of matched code quickly growing from around 25% to 58%.
@@ -174,7 +175,5 @@ Three factors dominate:
 Nigel the cat is still as busy as ever. There’s still work to be done, but matching functions has become much harder. At least until the next wave of frontier models is released.
 
 *If you’ve made it this far, you probably have an interest in decompilation and Snowboard Kids 2. Check out the [Snowboard Kids 2 decompilation project](https://github.com/cdlewis/snowboardkids2-decomp), and please reach out on Discord if you’d like to help.*
-
-**You can also [follow me on Bluesky](https://bsky.app/profile/chrislewis.au) for more Snowboard Kids 2 updates.**
 
 [^1]: I've gone back and forth between treating this as a Claude skill vs making it directly part of the CLAUDE.md for the decomp environment. As I was writing this blog post though, it did seem a little embarrassing not making it a skill, so I changed it back. 😶‍🌫️

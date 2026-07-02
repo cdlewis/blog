@@ -1,0 +1,12 @@
+{{- $post := or (.Param "blueskyPostURI") (.Param "blueskyPostURL") (.Param "blueskyPostUrl") (.Param "blueskyPost") -}}
+{{- with $post -}}
+<section class="bluesky-comments" data-bluesky-post="{{ . }}">
+  <h2>Comments</h2>
+  <p class="bluesky-comments__status">Loading Bluesky comments...</p>
+</section>
+
+{{- if not ($.Page.Scratch.Get "bluesky-comments-script") -}}
+{{- $.Page.Scratch.Set "bluesky-comments-script" true -}}
+<script defer src="{{ "js/bluesky-comments.js" | relURL }}"></script>
+{{- end -}}
+{{- end -}}
