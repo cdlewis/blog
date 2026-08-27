@@ -1,6 +1,6 @@
 +++
 title = "Decompiling a Nintendo 64 Game in 85 Days"
-date = "2026-08-20T12:23:59-07:00"
+date = "2026-08-26T20:23:59-07:00"
 description = "The original Snowboard Kids has been fully decompiled in only 85 days! In this post I delve into what changed and what lessons might apply to future projects."
 images = ["snowboard-kids-progress.png"]
 tags = []
