@@ -5,7 +5,7 @@ description = "The original Snowboard Kids has been fully decompiled in only 84 
 images = ["snowboard-kids-progress.png"]
 tags = []
 default = false
-blueskyPostURL = "https://bsky.app/profile/did:plc:5j7epmcl35kl5pni4y6ehpl2/post/3mtiaxymkvs24"
+blueskyPostURL = "https://bsky.app/profile/did:plc:5j7epmcl35kl5pni4y6ehpl2/post/3mu34bwrh4k2m"
 +++
 
 I’m very pleased to announce that the original _Snowboard Kids_ is now 100% decompiled! This means that all functions[^1] have matching C implementations that, when compiled, produce identical machine code to the original game.
