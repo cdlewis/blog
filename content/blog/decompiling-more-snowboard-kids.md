@@ -1,7 +1,7 @@
 +++
-title = "Decompiling a Nintendo 64 Game in 85 Days"
+title = "Decompiling a Nintendo 64 Game in 84 Days"
 date = "2026-08-26T20:23:59-07:00"
-description = "The original Snowboard Kids has been fully decompiled in only 85 days! In this post I delve into what changed and what lessons might apply to future projects."
+description = "The original Snowboard Kids has been fully decompiled in only 84 days! In this post I delve into what changed and what lessons might apply to future projects."
 images = ["snowboard-kids-progress.png"]
 tags = []
 default = false
@@ -14,7 +14,7 @@ This was obviously not a one-person effort. I am particularly grateful to [inspe
 
 My hope is that a full decompilation will prove useful to the Snowboard Kids community. Speedrunners in particular have long focused on the first game. Working source code can help shed light on externally observed phenomena such as CPU pathing and the exact factors contributing to player speed. A full understanding of the source code will also be useful for static recompilation and more ambitious modding efforts in the future.
 
-The speed at which the project was finished is also noteworthy. _Snowboard Kids_ took only 85 days to decompile compared with 596 days for _Snowboard Kids 2_, roughly one-seventh of the elapsed time.[^3]
+The speed at which the project was finished is also noteworthy. _Snowboard Kids_ took only 84 days to decompile compared with 596 days for _Snowboard Kids 2_, roughly one-seventh of the elapsed time.[^3]
 
 [![chart showing weekly Snowboard Kids decompilation progress](/snowboard-kids-progress.svg#darksafe "Weekly progress of the Snowboard Kids decompilation.")](https://decomp.dev/cdlewis/snowboardkids-decomp)
 
@@ -102,7 +102,7 @@ _If you’ve made it this far, you’re probably interested in decompilation and
 
 [^2]: In the best case, I think the project would have stalled around 89–90% without their IDO expertise.
 
-[^3]: For _Snowboard Kids 2_, I measured from the [first commit on 28 September 2024](https://github.com/cdlewis/snowboardkids2-decomp/commit/f1025d16a8aa1d11ec937f8c721af59149feee7c) to the [final matching function on 17 May 2026](https://github.com/cdlewis/snowboardkids2-decomp/commit/ec405bd1aa8a6a2fed4421e0ba33e37b973db4ec), a span of 596 days. The 85-day figure for _Snowboard Kids_ is my project-level count; the public repository itself spans from the [first commit on 28 May 2026](https://github.com/cdlewis/snowboardkids-decomp/commit/08f9b60604fd084215770d4a787f7fa9d4d61865) to the [final matching function on 19 August 2026](https://github.com/cdlewis/snowboardkids-decomp/commit/875002983e210f492aec61ebe78444d2227e270b), just over 83 days.
+[^3]: For _Snowboard Kids 2_, I measured from the [first commit on 28 September 2024](https://github.com/cdlewis/snowboardkids2-decomp/commit/f1025d16a8aa1d11ec937f8c721af59149feee7c) to the [final matching function on 17 May 2026](https://github.com/cdlewis/snowboardkids2-decomp/commit/ec405bd1aa8a6a2fed4421e0ba33e37b973db4ec), a span of 596 days. The 84-day figure for _Snowboard Kids_ is my project-level count; the public repository itself spans from the [first commit on 28 May 2026](https://github.com/cdlewis/snowboardkids-decomp/commit/08f9b60604fd084215770d4a787f7fa9d4d61865) to the [final matching function on 19 August 2026](https://github.com/cdlewis/snowboardkids-decomp/commit/875002983e210f492aec61ebe78444d2227e270b), just over 83 days.
 
 [^6]: Based on a manual review of the Git history, I identified roughly 41 expert-assisted matches, corresponding to about 4.8% of the commits I classified as function-matching work. This retrospective classification is approximate because commits can contain multiple functions, help was often incorporated into my own commits, and the figure does not measure person-hours. Note that I am not counting myself as an “expert”.
 
