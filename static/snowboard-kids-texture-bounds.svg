@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 370" role="img" aria-labelledby="title desc">
+<title id="title">The final pixel depends on the rendering mode</title>
+<desc id="desc">A screen rectangle starts at x zero and ends at x eight. One-cycle and two-cycle modes exclude the endpoint and draw eight pixel columns. Copy mode includes the endpoint and draws nine pixel columns. Both behaviours are correct for their mode.</desc>
+<rect width="760" height="370" rx="14" fill="#fff"/>
+<g font-family="system-ui, sans-serif" fill="#1e293b">
+<text x="26" y="38" font-size="22" font-weight="600">The final pixel depends on the rendering mode</text>
+<text x="26" y="65" font-size="14" fill="#475569">Schematic example • screen coordinates from x = 0 to x = 8</text>
+<text x="26" y="112" font-size="18">One-cycle / two-cycle mode</text>
+<rect x="26" y="127" width="61" height="45" fill="#dbeafe" stroke="#94a3b8"/><text x="56.5" y="156" text-anchor="middle" font-size="17">0</text>
+<rect x="87" y="127" width="61" height="45" fill="#dbeafe" stroke="#94a3b8"/><text x="117.5" y="156" text-anchor="middle" font-size="17">1</text>
+<rect x="148" y="127" width="61" height="45" fill="#dbeafe" stroke="#94a3b8"/><text x="178.5" y="156" text-anchor="middle" font-size="17">2</text>
+<rect x="209" y="127" width="61" height="45" fill="#dbeafe" stroke="#94a3b8"/><text x="239.5" y="156" text-anchor="middle" font-size="17">3</text>
+<rect x="270" y="127" width="61" height="45" fill="#dbeafe" stroke="#94a3b8"/><text x="300.5" y="156" text-anchor="middle" font-size="17">4</text>
+<rect x="331" y="127" width="61" height="45" fill="#dbeafe" stroke="#94a3b8"/><text x="361.5" y="156" text-anchor="middle" font-size="17">5</text>
+<rect x="392" y="127" width="61" height="45" fill="#dbeafe" stroke="#94a3b8"/><text x="422.5" y="156" text-anchor="middle" font-size="17">6</text>
+<rect x="453" y="127" width="61" height="45" fill="#dbeafe" stroke="#94a3b8"/><text x="483.5" y="156" text-anchor="middle" font-size="17">7</text>
+<rect x="514" y="127" width="61" height="45" fill="#f8fafc" stroke="#94a3b8"/><text x="544.5" y="156" text-anchor="middle" font-size="17">8</text>
+<text x="26" y="197" font-size="15" fill="#475569">Draw columns 0–7. The right edge is excluded.</text>
+<text x="26" y="242" font-size="18">Copy mode</text>
+<rect x="26" y="257" width="61" height="45" fill="#dbeafe" stroke="#94a3b8"/><text x="56.5" y="286" text-anchor="middle" font-size="17">0</text>
+<rect x="87" y="257" width="61" height="45" fill="#dbeafe" stroke="#94a3b8"/><text x="117.5" y="286" text-anchor="middle" font-size="17">1</text>
+<rect x="148" y="257" width="61" height="45" fill="#dbeafe" stroke="#94a3b8"/><text x="178.5" y="286" text-anchor="middle" font-size="17">2</text>
+<rect x="209" y="257" width="61" height="45" fill="#dbeafe" stroke="#94a3b8"/><text x="239.5" y="286" text-anchor="middle" font-size="17">3</text>
+<rect x="270" y="257" width="61" height="45" fill="#dbeafe" stroke="#94a3b8"/><text x="300.5" y="286" text-anchor="middle" font-size="17">4</text>
+<rect x="331" y="257" width="61" height="45" fill="#dbeafe" stroke="#94a3b8"/><text x="361.5" y="286" text-anchor="middle" font-size="17">5</text>
+<rect x="392" y="257" width="61" height="45" fill="#dbeafe" stroke="#94a3b8"/><text x="422.5" y="286" text-anchor="middle" font-size="17">6</text>
+<rect x="453" y="257" width="61" height="45" fill="#dbeafe" stroke="#94a3b8"/><text x="483.5" y="286" text-anchor="middle" font-size="17">7</text>
+<rect x="514" y="257" width="61" height="45" fill="#dbeafe" stroke="#94a3b8"/><text x="544.5" y="286" text-anchor="middle" font-size="17">8</text>
+<text x="26" y="327" font-size="15" fill="#475569">Draw columns 0–8. The right edge is included.</text>
+<text x="590" y="284" font-size="15" fill="#1e293b">Included</text><text x="26" y="354" font-size="14" fill="#475569">These are screen-rectangle rules. Texture-load bounds and sampling offsets are separate.</text></g></svg>

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 300" role="img" aria-labelledby="title desc">
+<title id="title">Game-specific C patches</title>
+<desc id="desc">Snowboard Kids has 8,257 physical lines in 31 C patch files. Snowboard Kids 2 has 5,075 lines in 16 files. Bars start at zero and use the same scale. Snapshot taken 26 September 2026.</desc>
+<rect width="760" height="300" rx="14" fill="#fff"/>
+<g font-family="system-ui, sans-serif" fill="#1e293b">
+<text x="26" y="38" font-size="22" font-weight="600">Game-specific C patches</text>
+<text x="26" y="64" font-size="14" fill="#475569">Physical lines, including comments and blank lines</text>
+<g stroke="#e2e8f0"><path d="M202 86 V224 M302 86 V224 M402 86 V224 M502 86 V224 M602 86 V224"/></g>
+<text x="26" y="119" font-size="18">Snowboard Kids</text><text x="26" y="142" font-size="14" fill="#475569">31 files</text>
+<rect x="202" y="100" width="412.85" height="48" rx="3" fill="#4e91d0"/>
+<text x="628" y="130" font-size="19" font-weight="600">8,257</text>
+<text x="26" y="189" font-size="18">Snowboard Kids 2</text><text x="26" y="212" font-size="14" fill="#475569">16 files</text>
+<rect x="202" y="170" width="253.75" height="48" rx="3" fill="#64748b"/>
+<text x="469" y="200" font-size="19" font-weight="600">5,075</text>
+<g font-size="13" text-anchor="middle" fill="#475569"><text x="202" y="244">0</text><text x="302" y="244">2,000</text><text x="402" y="244">4,000</text><text x="502" y="244">6,000</text><text x="602" y="244">8,000</text></g>
+<text x="26" y="281" font-size="13" fill="#475569">Top-level patches/*.c files • local checkouts • 26 September 2026</text>
+</g></svg>
