@@ -16,7 +16,7 @@ This was far from a solo effort. I’d like to thank the members of the communit
 * M. Lee Lunsford from the Snowboard Kids Discord for his amazing launcher image.
 * [Darío](https://github.com/DarioSamo) for his help and advice throughout the recompilation effort.[^1]
 * Everyone who helped with the decompilation, particularly [inspectredc](https://github.com/inspectredc), [Bl00D4NGEL](https://github.com/Bl00D4NGEL), and [queueRAM](https://github.com/queueRAM).
-* Everyone who tested the pre-release builds, especially [McGyna](https://twitch.tv/McGyna), who sent me dozens of videos and screenshots showing in exquisite detail all the places I’d screwed up.
+* Everyone who tested the pre-release builds, especially [McGyna](https://twitch.tv/McGyna), who sent me dozens of videos and screenshots showing in exquisite detail all the ways I’d screwed up or missed something.
 
 ![screenshot of the Snowboard Kids: Recompiled launcher](/snowboard-kids-launcher.webp "Launcher artwork by M. Lee Lunsford.")
 
