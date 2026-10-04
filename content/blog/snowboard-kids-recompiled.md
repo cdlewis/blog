@@ -2,7 +2,7 @@
 title = "Introducing Snowboard Kids: Recompiled"
 date = "2026-10-02T06:39:43-07:00"
 description = "Snowboard Kids is recompiled for Windows, Mac and Linux, with widescreen, high frame rates, local multiplayer and mod support."
-images = ["snowboard-kids-launcher.png"]
+images = ["snowboard-kids-launcher-preview.png"]
 tags = []
 default = false
 +++
