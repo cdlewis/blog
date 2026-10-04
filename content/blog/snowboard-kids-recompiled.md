@@ -5,6 +5,7 @@ description = "Snowboard Kids is recompiled for Windows, Mac and Linux, with wid
 images = ["snowboard-kids-launcher-preview.png"]
 tags = []
 default = false
+blueskyPostURL = "https://bsky.app/profile/did:plc:5j7epmcl35kl5pni4y6ehpl2/post/3mx2rohtgec2p"
 +++
 
 **TL;DR [Snowboard Kids: Recompiled](https://github.com/cdlewis/snowboardkids-recomp/releases) is available for Windows, Mac and Linux!**
