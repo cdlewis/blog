@@ -1,100 +1,99 @@
 +++
 title = "Make Your Own Recomp Texture Pack"
 date = "2026-10-05T21:25:58-07:00"
-description = "Step-by-step guide to making your own texture pack using Snowboard Kids as an example."
+description = "Make a texture pack for Snowboard Kids: Recompiled without touching the command line."
 tags = []
 +++
 
-Intro
-* there all this amazing fan art in the community
-	* I wish we had more texture packs for recomps
-	* i have no artistic talent myself
+> this pitch comes across as weird and self-centered
+> pitch should be:
+>> There’s so much amazing fan art in the retro gaming community. I'm very grateful to have had M. Lee Lunsford and Moz contribute artwork for [Snowboard Kids: Recompiled](link to game) and [Snowboard Kids 2: Recompiled](link to game)
+>> Recomps help mordernise games visually through improved framerates and widescreen support. but i think texture packs are an underrated and underutilised capability
+>> Making a texture pack isn’t especially hard, and RT64’s texture system is [well documented](https://github.com/rt64/rt64/blob/main/TEXTURE-PACKS.md). But it can be intimidating if you’re not used to messing around with recomps and command-line tools.
+>> This guide walks through a small texture pack using [Snowboard Kids: Recompiled](https://github.com/cdlewis/snowboardkids-recomp) as an example. All you’ll need a working copy of the game. Everything else is included on this page.
 
-<show snowboard kids: recompiled and snowboard kids 2: recompiled launcher backgrounds side by side. they'll each need to be small to fit but it's fine. might be easier to make a new composite image than figure out the css>
+![Snowboard Kids and Snowboard Kids 2 launcher artwork side by side.](/snowboard-kids-launcher-art-pair.webp "Launcher artwork by M. Lee Lunsford (left), and Moz (right).")
 
-* making texture packs isn't super hard, it's [well documented](link to rt64 texture pack documentation) but i think it can be intimidating if you're not used to messing around with recomps and command line tools add additional friction to the process
-* the goal of this guide is to serve as a simple easy to follow set of instructions for making a simple texture pack, using [snowboard kids recompiled](link to recomp) as an example
-	* you need no other tools other than this page and the snowboard kids recomp and an image editor
-	* i promise you will never touch the command line
+## What we’re going to do
 
-## High level overview of what we're about to do pick a better title than this
+> no this was supposed to be a brief overview of the process at a high level before we get into the nitty gritty
+1. Collect textures while playing the game.
+2. Edit a couple of them. I’ll use an image upscaler for this example.
+3. Package the replacements as a mod we can install and share.
 
-* We're going to run the game and collect all the textures we see
-* We're going to edit them using a simple upscaling tool as an example 
-* We're going to make a game mod that replaces the original textures with our new textures
+## 1. Enable developer mode
 
-## 1. Enable Developer Mode
+RT64, the renderer used by these recomps, includes a developer menu that lets us collect and replace textures.
 
-Before we can change anything we first need to dump textures from the game to edit.
+In recent builds of Snowboard Kids: Recompiled and Snowboard Kids 2: Recompiled, go to **Settings → Graphics** and enable **Dev Mode**. Congratulations, you're done, you can skip to the next step.
 
-Recompilations built with RT64 (confirm this is what is adding the menu, etc). There is a secret developer mode we need to turn on so that we can start dumping textures.
+>> get me a screenshot of this and add here
 
-If you're running the latest version of Snowboard Kids: Recompiled or Snowboard Kids 2: Recompiled, all you need to do is go to Graphics --> Enable Developer Mode. Congratulations, you can move on to then next step. Otherwise, you're going to have to keep reading!
+If your game doesn’t have that option, run the game once, close it, then open its settings folder. For Snowboard Kids: Recompiled:
 
-Enabling developer mode on a standard N64Recompiled game requires us to edit a specific config file for the recomp. The location of this file will vary depending on your operating system:
+* **Windows:** Press **Windows+R**, paste `%LOCALAPPDATA%\SnowboardKidsRecompiled`, and press Enter.
+* **macOS:** In Finder, choose **Go → Go to Folder**, paste `~/Library/Application Support/SnowboardKidsRecompiled`, and press Return.
+* **Linux:** Open `~/.config/SnowboardKidsRecompiled` in your file manager.
 
-* **Windows**:  Press **Windows+R**, paste `%LOCALAPPDATA%\SnowboardKidsRecompiled`, and press Enter.
-* **macOS**: In Finder, choose **Go > Go to Folder**, paste `~/Library/Application Support/SnowboardKidsRecompiled`, and press Return.
-* **Linux**: In your file manager, press **Ctrl+L**, enter `~/.config/SnowboardKidsRecompiled`, and press Enter.
-
-*Make sure you've run the game at least once. Otherwise you won't be able to see the config file we're about to change.*
+Other recompilations will use their own folder names but they will be in the same directory. Make a backup of `graphics.json`, then open the original in a plain-text editor. Change `"developer_mode": false` to `"developer_mode": true` and save it.
 
 ## 2. Collect the original textures
 
-Now when you start the game and press **F1** (try Fn+F1 if that doesn't work) you'll see a developer menu. Pressing F1 again will hide the menu.
+Create a folder called `Dumps` somewhere easy to find. Start the game and press **F1** (**Fn+F1** on some keyboards) to open the developer menu.
 
-Open the game and start dumping textures:
+Select the **Textures** tab, click **Start dumping textures**, and choose `Dumps`.
 
-1. In the debugger, select the **Textures** tab.
-2. Click **Start dumping textures**, then choose your `Dumps` folder.
+![The RT64 Textures tab with the Start dumping textures button.](/start-dumping-textures.png)
 
-<screenshot of the textures tab of the debug menu> start-dumping-textures.png
+Press F1 again to hide the menu, then visit the character-select screen. We’re going to replace a couple of Jam’s textures.
 
-*Note: you will need to repeat this step each time you restart the game.*
+Dumping collects textures as the game draws them, so you’ll only get images from places you visit. You can collect more later. If you restart the game, you’ll need to start dumping again.
 
-In our snowboard kids: recompiled example let's go to the character select menu so we can replace those textures.
+## 3. Edit a texture
 
-<screenshot of the character select menu>
+Open `Dumps` and browse the PNGs. Some images fit in a single texture; larger ones can be split across several. We’ll stick with individual textures for now.
 
-Dumping collects textures as the game draws them. A short visit will not collect every course, character, animation, or menu. You can collect more later.
+If you see `.json`, `.tmem`, and `.rdram` files but no PNGs, your recomp may use an older version of RT64. You can use [this converter](https://chrislewis.au/texture-converter/) to change them to PNGs.
 
-## 3. Edit texture
+Create a separate folder called `MyPack` for your replacements. Edit your chosen images and save them there as PNGs, keeping their proportions and any transparent areas intact. Leave the original dumps alone.
 
-Open the converted images folder and find the image that you want to edit. You'll notice that some images are represented as a single texture file while other, larger in-game images, are spread across multiple files. The principles we're discussing today work just as well for these larger files but for simplicity we'll be focusing on the single file use-case
+As established, I’m not artistically talented, so I’m running Jam’s textures through an [online image upscaler](https://upscale.chino.icu/). You can redraw them, recolour them, or do something much more interesting.
 
-*Note: if you look in the folder and see this weird collection of json, tmem and rdram files but no PNG files, you're running a recomp that hasn't upgraded to the latest version of RT64. You'll first need to use [this tool](https://chrislewis.au/texture-converter/) to convert your images.*
+## 4. Replace the textures in game
 
-i am not artistically talented so i'm going to run the character textures we captured earlier through an [online image upscaler](https://upscale.chino.icu)
+This is the fiddliest part: finding the drawing operation, or “draw call”, that uses your texture. I’ve recorded a walkthrough of replacing two of Jam’s textures:
 
-## 4. Replace the texture in game
+{{< youtube id="wQbQtcwvjm0" caption="Replacing two of Jam’s textures with higher-resolution versions." >}}
 
-Now we're going to locate the draw call for the specific texture you want to replace and update it live in game. Unfortunately this process is a little involved. I've created a youtube video that walks through the steps as well though.
+At a high level, the process is:
 
-1. Start the game and navigate to the scene showing your chosen texture.
-2. Press F1, open **Textures**, and click **Load directory**. Select the directory containing your higher-definition textures.
-4. Use the debugger's **Pause** (F4) button to freeze the scene.
-5. Right-click the object in the game view to inspect the draws underneath it. You can also
-   browse the debugger's draw-call list and hover over entries to identify the object.
-   A draw call is one drawing operation; the same object may use several.
-6. Expand the relevant texture tile, check its preview, and click **Replace**.
-7. Select `MyPack/textures/my-sign.png`. The image must already be inside `MyPack`.
-8. Return to **Textures** and click **Save directory**. You'll notice that there's a new file (rt64.json) in the directory now!
-10. Unpause, hide the debugger, and inspect your change in motion.
+1. Return to the character-select screen and press **F1**.
+2. Open **Textures**, click **Load directory**, and select `MyPack`.
+3. In the debugger, click **Pause (F4)** to freeze the scene.
+4. Right-click the part of Jam you want to replace. Inspect the draws underneath it and expand the relevant texture tile until you find the matching preview.
+5. Click **Replace** and select your edited PNG inside `MyPack`.
+6. Repeat for the other texture, then return to **Textures** and click **Save directory**.
 
-{{ youtube mBZVcxJypuU "caption explaining that the video is a walkthrough of replacing two of Jam's textures with higher definition versions." }}
+You should now have an `rt64.json` file in `MyPack`. This records which original textures your images replace. Keep it with them.
 
-## 5. Package your work as an `.rtz` file
+Unpause, hide the developer menu, and check your work. If you make more edits, use **Load directory** again to reload the images.
 
-* Now that we've replaced the textures that we wanted to replace, it's time to package that work as a mod (.rtz file) for distribution.
-	* packaging does a few things, including converting images to a more efficient format and creating a cache to help speed up texture-loading times.
+## 5. Package your work
 
-You can use the official command line tool to do this but that would break our rule against no command line tools! I've created a simple online tool that replicates the process. Everything is done locally in your browser, no image data etc will leave your computer.
+Now we’ll turn `MyPack` into an `.rtz` file for distribution. Packaging converts the images to a more efficient format and creates a cache to help reduce texture-loading delays.
 
-If you would like an icon as well, be sure to put a thumb.png file in that directory
+There’s an official command-line tool, but that would break our promise! I’ve made a browser tool that handles this for us. Everything happens locally; your images stay on your computer.
+
+If you’d like an icon in the mod menu, put an image named `thumb.png` in `MyPack` too.
 
 {{< texture-tool src="https://chrislewis.au/texture-packer/" title="RT64 texture packer" >}}
-*If the embedded tool does not load, [open the packer in a new tab](https://chrislewis.au/texture-packer/).*
+
+Select `MyPack`, fill in your pack’s details, and choose **Pack & download**. For this example, the Game ID is `snowboardkids`. Save the downloaded `.rtz` somewhere outside `MyPack`.
+
+*If the embed doesn’t load, [open the packer in a new tab](https://chrislewis.au/texture-packer/).*
 
 ## 6. Admire your finished work
 
-Restart the game, open the **Mods** menu and install the .rtz file that you just created. Your changes should be visible!
+Restart the game, open **Mods**, and install and enable your `.rtz` file. Head back to character select and check that everything looks right.
+
+You’ve made a texture pack! Now you can share the `.rtz`, or go back and replace more textures. I’m looking forward to seeing what people make.
