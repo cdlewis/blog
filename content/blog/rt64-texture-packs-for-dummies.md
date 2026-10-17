@@ -1,6 +1,6 @@
 +++
 title = "Make Your Own Recomp Texture Pack"
-date = "2026-10-05T21:25:58-07:00"
+date = "2026-10-15T21:25:58-07:00"
 description = "Make a texture pack for Snowboard Kids: Recompiled without touching the command line."
 tags = []
 images = ["characters-upscale-social.png"]

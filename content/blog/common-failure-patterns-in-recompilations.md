@@ -1,6 +1,6 @@
 +++
 title = "Common Failure Patterns in Recompilations"
-date = "2026-10-03T11:42:27-07:00"
+date = "2026-10-16T11:42:27-07:00"
 
 #
 # description is optional
