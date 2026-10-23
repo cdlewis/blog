@@ -4,6 +4,7 @@ date = "2026-10-23T10:00:00-07:00"
 description = "Make a texture pack for Snowboard Kids: Recompiled without touching the command line."
 tags = []
 images = ["characters-upscale-social.png"]
+blueskyPostURL = "https://bsky.app/profile/chrislewis.au/post/3mykslfsi2c2h"
 +++
 
 Nintendo 64 games are instantly recognisable from their charming[^2] low-resolution textures. Recomps improve many things about a game, but generally leave those textures intact. For anyone wanting a more modern look, or a different artistic style entirely, texture packs offer a ready-made solution. As the name suggests, they let you replace in-game textures with images of your choice, often at much higher resolutions.
