@@ -10,63 +10,22 @@ draft = true
 tags = []
 +++
 
-**TLDR; [Snowboard Kids: Recompiled](https://github.com/cdlewis/snowboardkids-recomp/releases) is available for Windows, Mac and Linux!**
+>> Introduction section do something with bullet points
+* having done two recompilations now i noticed some common patterns across the two games.
+	* you might reasonably say that these could just be due to using the same developer for both games -> i checked these against other recomps as well to get some signal that they are not idiosyncratic to Snowboard Kids
+* as well as my strategies for testing these and other changes, validation was much more automated than in the first recomp
+>> annecdoate: At the time of writing, the first game’s patch directory contains roughly 8,300 lines of C across 31 files, compared with about 5,100 lines across 16 files for the sequel.[^1] Lines of code are a terrible measure of difficulty, but they give some indication of how much game-specific work remained after the basic recompilation was running.
 
-Following the [decompilation of Snowboard Kids](/decompiling-a-nintendo-64-game-in-84-days/), I’ve been working on recompiling the game for modern hardware. Today I’m pleased to announce the release of Snowboard Kids: Recompiled!
+# Model Tagging
 
-This was far from a solo effort. I’d like to thank the members of the community who helped make this release possible.
+* Most obvious problem. recomps will almost inevitably have a need for this
+* discussed way back in https://blog.chrislewis.au/snowboard-kids-2-is-recompiled/
+* >> brief explanation of the issue
+* >> video or gif example from one of the debug videos
+* brief explanation of how to fix
+* link to actual example -- preferably something very simple
 
-* Moz Lunsford from the Snowboard Kids Discord for his amazing launcher image.
-* [Darío](https://github.com/DarioSamo) for his help and advice throughout the recompilation effort.[^11]
-* Everyone who helped with the decompilation, particularly [inspectredc](https://github.com/inspectredc), [Bl00D4NGEL](https://github.com/Bl00D4NGEL), and [queueRAM](https://github.com/queueRAM).
-* Everyone who tested the pre-release builds, especially [McGyna](https://twitch.tv/McGyna). He played through the game extensively and sent me around 15 videos of bugs and glitches, which were invaluable when tracking down the problems.
-
-![screenshot of the Snowboard Kids: Recompiled launcher](/snowboard-kids-launcher.png "Launcher artwork by Moz Lunsford.")
-
-## Features
-
-_Snowboard Kids: Recompiled_ supports widescreen and ultrawide displays, high frame rates, configurable controls, mods and so much more.
-
-The game also includes a few simple mods to serve as inspiration:
-
-* **Mod Example:** available as a [template on Github](https://github.com/cdlewis/snowboardkids-recomp-mod-template), this is a great starting point if you’re looking to create your own mod. It gives you unlimited parachutes and fans for good measure.
-* **Quick Start:** at some point I got tired of watching the opening credits while testing the recomp. Skip straight to the title screen.
-* **Nepo Kids:** takes place in an alternate reality where the kids had wealthy parents. Start the game with all content unlocked.[^888]
-* **No Rubber Banding:** there’s no worse feeling than building a massive lead only to have the AI inexplicably catch up and overtake you.
-
-![screenshot of the mod menu](/mod-menu.png "The bundled example mod keeps player one supplied with an umbrella and fan. Perfect for multiplayer.")
-
-There are also some less conspicuous quality-of-life improvements. Saves are handled directly by the recompilation, avoiding the hassle of a virtual controller pack and allowing us to streamline the game menus in the process.
-
-### Local Multiplayer
-
-Local multiplayer is supported for up to four players, including high frame rates and a choice of vertical or horizontal splits for two-player races.
-
-![screenshot of split-screen multiplayer](/split-screen.png "Two-player races default to a vertical split.")
-
-Behind the scenes, both Snowboard Kids recompilations share a fork of [RecompFrontend](https://github.com/cdlewis/RecompFrontend). This provides the launcher, settings, and controller configuration, with some additional work on theming and (in my opinion) a smoother multiplayer controller assignment flow.
-
-![screenshot of controller assignment for a four-player game](/pair-controllers.gif "Each player presses a button on their controller to claim a slot. The keyboard can also be assigned to a player.")
-
-I’d like to upstream some of these changes eventually. Multiplayer support is a relatively new [RecompFrontend](https://github.com/N64Recomp/RecompFrontend) feature though and I don’t expect there to be much agreement on the best design until more projects start using it.
-
-If, like me, you’re more of a _Snowboard Kids 2_ person, its multiplayer support is [also available](https://github.com/cdlewis/snowboardkids2-recomp/releases) as an alpha release.
-
-## Common Problems
-
-Aside from the ever-present need to tag models[^533] 
-
-There were a number of common patterns in the way things failed across the two recompilations.
-
-Having already recompiled the sequel, I expected the original game to be fairly straightforward. I recognised more of the problems and knew where to start looking, but that didn’t translate into needing fewer patches. The recurring lesson was that the renderer can do a lot automatically, but it can’t always infer what the game intended.
-
-At the time of writing, the first game’s patch directory contains roughly 8,300 lines of C across 31 files, compared with about 5,100 lines across 16 files for the sequel.[^1] Lines of code are a terrible measure of difficulty, but they give some indication of how much game-specific work remained after the basic recompilation was running.
-
-Some of this is the unglamorous work of teaching the renderer what belongs together. To interpolate a moving object correctly, RT64 needs to associate its graphics with the same object in the previous frame. That becomes more complicated when objects appear and disappear, the camera changes suddenly, or several players are looking at the same scene through different viewports.
-
-The patches therefore cover things as specific as snow spray, projectiles, board previews, and the lift exit bar. These are small pieces of the game individually, but you encounter them constantly while playing. Getting the main character moving smoothly is only the beginning.
-
-### Camera Interpolation
+# Camera Interpolation
 
 RT64 can draw extra frames between those produced by the original game, giving it that smooth 60 FPS feel. This works nicely until it smooths out something that was supposed to change instantly. Both games had this problem with their cameras. In SBK1’s opening cutscene, the camera cuts between different CPU racers, jumping to a new position and angle.[^91] RT64 interpolates across that jump, turning what should be a clean cut into a brief, glitchy camera sweep.
 
@@ -76,7 +35,7 @@ The solution is to tell RT64 when to stop interpolating. In the sequel’s [came
 
 That threshold is a heuristic, though. A fast, continuous pan can turn a long way without being a cut. The first game’s camera-cut code therefore also checks the camera mode and update function, allowing its scripted flybys to turn quickly without snapping. That detection is currently disabled in the local build, so it isn’t an active fix there yet.[^camera-cuts] The broader lesson is that smooth movement and deliberate discontinuities need different treatment, even when they use the same drawing code.
 
-### Texture Rendering
+# Texture Rendering
 
 Sprites can develop stray edges, repeated slivers of artwork, or uneven scaling when a game is rendered at higher resolutions. The image itself can be perfectly fine. The problem is in how the game tells the renderer to read it.
 
@@ -93,7 +52,7 @@ The fix is to make the sprite’s texture bounds and sampling coordinates agree 
 
 These are different settings in the same drawing process, and a function can need both corrections. The HUD screenshot illustrates the visible problem, but doesn’t isolate which correction fixes it.[^hud-texture-bounds] When investigating an edge artefact, check both where the texture is allowed to end and where the drawing code actually samples it. Moving the samples won’t repair an oversized boundary, and shrinking the boundary won’t correct misaligned samples.
 
-### Widescreen
+# Cutscenes and Pillboxing
 
 Widescreen follows a similar pattern. RT64, the renderer used by the recompilation, already does much of the work for ordinary 3D scenes. It adjusts the camera projection so a wider display shows more of the world to the left and right while keeping objects in proportion. At the same height, moving from 4:3 to 16:9 gives us a view a third wider. The scenery can fill that space because it already exists in 3D, provided the game still submits it for drawing.
 
@@ -138,7 +97,7 @@ The game still has to produce those extra tiles. The patch widens the backdrop�
 
 There was also a small seam fix. Each background tile overlaps the next by one native pixel, which guards against RT64’s scissor-edge correction opening a gap. The texture step and tile spacing stay unchanged, and the next tile draws over the overlap. The pattern therefore keeps its original proportions.
 
-## Testing
+# Testing
 
 Testing all of this manually quickly becomes tedious. There are three HUD modes, several screen shapes, and five basic race layouts when you include single player, both two-player splits, and three- and four-player races. A HUD adjustment that looks correct in single player can still put another player’s lap counter outside their viewport.
 
@@ -162,19 +121,16 @@ This still needs care. A script finishing successfully doesn’t mean it reached
 
 Automating the repetitive checks also doesn’t replace people actually playing the game. A screenshot can look fine while movement feels wrong, and a short scripted route will miss plenty of interactions between items, racers, and scenery. This is where the human testing was invaluable. McGyna’s recordings provided much longer stretches of gameplay and concrete examples of things going wrong, which made it considerably easier to investigate them.
 
+>> there's way more you could do here
+>> i've been messing around with making custom bots that simulate keyboard input but the piggyback on the existing AI pathing in game
+
 ## What Next?
 
-For me, a break. I’ve spent a lot of time on these games, and the recent negativity surrounding the use of AI has also made me want to step back from the scene for a while. With both games now playable on modern platforms, this feels like a good point to do that. There’s still plenty that could be improved, but the original goals are complete.
+For me, a break. Work on better documenting the SBK1/SBK2 decomps. But not in a rush to start another big project.
 
-For the games themselves, I’m excited to see what other people do next. Alongside the decompilations and recompilations, there’s been some very cool work by [Ch3Games](https://www.youtube.com/@Ch3Games-SBKD) on a _Snowboard Kids Definitive Edition_.
+Hang back and enjoy all the other new snowboard kids content like Definitive Addition(link to youtube video) and mods shared on the [Snowboard Kids Discord](https://discord.gg/PJzG4F8SpF). 
 
-{{< youtube id="fRN-VPQgcGI" caption="Snowboard Kids: Definitive Edition trailer by Ch3Games. I am not associated/involved with this project." >}}
-
-Modding is also much more approachable now. If you’re interested, take a look at the [example mod and template](https://github.com/cdlewis/snowboardkids-recomp-mod-template). Starting with a small change to an existing mechanic is a good way to learn how the game works, and any discoveries can feed back into better names and documentation in the decompilation.
-
-It’s lovely to see this much activity around a series that’s been dormant for so long. If you love these games, come join us on the [Snowboard Kids Discord](https://discord.gg/PJzG4F8SpF). I’d love to see more people dip their toes in the water, whether that means making mods, investigating the original code, or just playing a few races.
-
-**Download [Snowboard Kids: Recompiled](https://github.com/cdlewis/snowboardkids-recomp/releases)**
+{{< recomp-release-logos >}}
 
 [^11]: At one point I woke up to 43 messages from him going into minute detail on everything I’d missed in an early alpha build 🫠.
 
