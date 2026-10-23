@@ -114,7 +114,7 @@ I’ve updated all the character-select portraits using the upscaling tool menti
 
 ![Original and upscaled Snowboard Kids character-select portraits.](/characters-upscale.png "Original textures on the left of the divider; upscaled textures on the right.")
 
-*If you’ve made it this far, you might enjoy the [Snowboard Kids Community Discord](https://discord.gg/bwQ85rUED).*
+*If you’ve made it this far, you might enjoy the [Snowboard Kids Community Discord](https://discord.gg/PJzG4F8SpF).*
 
 {{< recomp-release-logos >}}
 

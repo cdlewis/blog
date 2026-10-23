@@ -172,7 +172,7 @@ For the games themselves, I’m excited to see what other people do next. Alongs
 
 Modding is also much more approachable now. If you’re interested, take a look at the [example mod and template](https://github.com/cdlewis/snowboardkids-recomp-mod-template). Starting with a small change to an existing mechanic is a good way to learn how the game works, and any discoveries can feed back into better names and documentation in the decompilation.
 
-It’s lovely to see this much activity around a series that’s been dormant for so long. If you love these games, come join us on the [Snowboard Kids Discord](https://discord.gg/bwQ85rUED). I’d love to see more people dip their toes in the water, whether that means making mods, investigating the original code, or just playing a few races.
+It’s lovely to see this much activity around a series that’s been dormant for so long. If you love these games, come join us on the [Snowboard Kids Discord](https://discord.gg/PJzG4F8SpF). I’d love to see more people dip their toes in the water, whether that means making mods, investigating the original code, or just playing a few races.
 
 **Download [Snowboard Kids: Recompiled](https://github.com/cdlewis/snowboardkids-recomp/releases)**
 

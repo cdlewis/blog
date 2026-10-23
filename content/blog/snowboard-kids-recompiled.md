@@ -54,7 +54,7 @@ If, like me, you’re more of a _Snowboard Kids 2_ person, its multiplayer suppo
 
 There’s plenty more to say about building and testing the recompilation. Projects using [N64Recomp](https://github.com/N64Recomp/N64Recomp) seem to encounter many of the same problems, and I think some of what I learnt could help other recompilation efforts. When I started writing those thoughts down, though, this post quickly ran over 3,000 words. I’ve decided to cover the development process in a separate series. Stay tuned!
 
-*If you love Snowboard Kids, please do join us on the [Snowboard Kids Discord](https://discord.gg/bwQ85rUED).*
+*If you love Snowboard Kids, please do join us on the [Snowboard Kids Discord](https://discord.gg/PJzG4F8SpF).*
 
 **Download [Snowboard Kids: Recompiled](https://github.com/cdlewis/snowboardkids-recomp/releases)**
 
